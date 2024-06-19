@@ -7,6 +7,7 @@ import { IamModule } from './iam/iam.module';
 import { UsersModule } from './users/users.module';
 import { FaqsModule } from './faqs/faqs.module';
 import { CategoriesModule } from './categories/categories.module';
+import { SubcategoriesModule } from './subcategories/subcategories.module';
 
 @Module({
   imports: [
@@ -24,7 +25,8 @@ import { CategoriesModule } from './categories/categories.module';
     IamModule,
     UsersModule,
     FaqsModule,
-    CategoriesModule
+    CategoriesModule,
+    SubcategoriesModule
   ],
   controllers: [AppController],
   providers: [AppService],

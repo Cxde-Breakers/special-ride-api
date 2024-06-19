@@ -97,7 +97,7 @@ export class CategoriesService {
 
       return {
         statusCode: HttpStatus.ACCEPTED,
-        message: 'Category deleted successfully',
+        message: 'Category disabled successfully',
       }
     } catch (error) {
       if (error instanceof NotFoundException) {
