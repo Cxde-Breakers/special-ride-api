@@ -1,0 +1,25 @@
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
+
+@Entity('faqs')
+export class Faq {
+    @PrimaryGeneratedColumn('uuid')
+    id: string;
+
+    @Column()
+    question: string;
+
+    @Column()
+    answer: string;
+
+    @Column({unique: true})
+    order: number;
+
+    @Column({ default: true})
+    status: boolean;
+
+    @CreateDateColumn()
+    createdAt: Date;
+
+    @UpdateDateColumn()
+    updatedAt: Date;
+}
