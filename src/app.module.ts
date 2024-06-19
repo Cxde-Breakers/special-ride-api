@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { IamModule } from './iam/iam.module';
 import { UsersModule } from './users/users.module';
 import { FaqsModule } from './faqs/faqs.module';
+import { CategoriesModule } from './categories/categories.module';
 
 @Module({
   imports: [
@@ -22,7 +23,8 @@ import { FaqsModule } from './faqs/faqs.module';
     }),
     IamModule,
     UsersModule,
-    FaqsModule
+    FaqsModule,
+    CategoriesModule
   ],
   controllers: [AppController],
   providers: [AppService],
