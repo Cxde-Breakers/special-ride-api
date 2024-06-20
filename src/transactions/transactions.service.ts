@@ -17,7 +17,10 @@ export class TransactionsService {
   async create(createTransactionDto: CreateTransactionDto) {
     try {
       const transaction = this.transactionRepository.create({
-        ...createTransactionDto
+        ...createTransactionDto,
+        paymentBy: {
+          id: createTransactionDto.paymentBy
+        }
       });
 
       await this.transactionRepository.save(transaction);
@@ -77,7 +80,10 @@ export class TransactionsService {
 
       await this.transactionRepository.update(
         transaction.id, {
-        ...updateTransactionDto
+          ...updateTransactionDto,
+          paymentBy: {
+            id: updateTransactionDto.paymentBy
+          }
       });
 
       return {
