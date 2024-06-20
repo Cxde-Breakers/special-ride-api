@@ -8,6 +8,8 @@ import { UsersModule } from './users/users.module';
 import { FaqsModule } from './faqs/faqs.module';
 import { CategoriesModule } from './categories/categories.module';
 import { SubcategoriesModule } from './subcategories/subcategories.module';
+import { TransactionsModule } from './transactions/transactions.module';
+import { BookingsModule } from './bookings/bookings.module';
 
 @Module({
   imports: [
@@ -26,7 +28,9 @@ import { SubcategoriesModule } from './subcategories/subcategories.module';
     UsersModule,
     FaqsModule,
     CategoriesModule,
-    SubcategoriesModule
+    SubcategoriesModule,
+    TransactionsModule,
+    BookingsModule
   ],
   controllers: [AppController],
   providers: [AppService],

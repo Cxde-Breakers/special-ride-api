@@ -14,10 +14,14 @@ import { AuthenticationGuard } from './authentication/guards/authentication.guar
 import { RefreshTokenIdsStorage } from './authentication/refresh-token-ids.storage';
 import { RolesGuard } from './authorization/guards/roles.guard';
 import { OtpAuthenticationService } from './authentication/otp-authentication.service';
+import { Passenger } from 'src/users/passengers/entities/passenger.entity';
+import { Driver } from 'src/users/drivers/entities/driver.entity';
+import { Transaction } from 'src/transactions/entities/transaction.entity';
+import { Booking } from 'src/bookings/entities/booking.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, Passenger, Driver, Transaction, Booking]),
     JwtModule.registerAsync(jwtConfig.asProvider()),
     ConfigModule.forFeature(jwtConfig),
   ],

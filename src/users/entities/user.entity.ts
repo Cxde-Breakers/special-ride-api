@@ -1,7 +1,8 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Role } from "../enums/role.enum";
+import { Transaction } from "src/transactions/entities/transaction.entity";
 
-@Entity()
+@Entity('users')
 export class User {
     @PrimaryGeneratedColumn('uuid')
     id: string;
@@ -12,7 +13,7 @@ export class User {
     @Column()
     password: string;
 
-    @Column({ enum: Role, default: Role.Regular })
+    @Column({ enum: Role, default: Role.Passenger })
     role: Role;
 
     @Column({ default: false })
@@ -20,4 +21,13 @@ export class User {
 
     @Column({ nullable: true })
     tfaSecret: string;
+
+    @Column()
+    image: string;
+
+    @Column()
+    emailVerifiedAt: Date;
+
+    @OneToMany(() => Transaction, transaction => transaction.user)
+    transactions: Transaction[];
 }
