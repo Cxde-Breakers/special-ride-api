@@ -11,6 +11,7 @@ import { SubcategoriesModule } from './subcategories/subcategories.module';
 import { TransactionsModule } from './transactions/transactions.module';
 import { BookingsModule } from './bookings/bookings.module';
 import { CountriesModule } from './countries/countries.module';
+import { SettingsModule } from './settings/settings.module';
 
 @Module({
   imports: [
@@ -32,7 +33,8 @@ import { CountriesModule } from './countries/countries.module';
     SubcategoriesModule,
     TransactionsModule,
     BookingsModule,
-    CountriesModule
+    CountriesModule,
+    SettingsModule
   ],
   controllers: [AppController],
   providers: [AppService],
