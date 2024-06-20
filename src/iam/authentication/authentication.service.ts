@@ -12,24 +12,49 @@ import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { RefreshTokenIdsStorage } from './refresh-token-ids.storage';
 import { randomUUID } from 'crypto';
 import { InvalidatedRefreshTokenError } from './errors/invalidated-refresh-token-error';
+import { Passenger } from 'src/users/passengers/entities/passenger.entity';
+import { Driver } from 'src/users/drivers/entities/driver.entity';
+import { CreatePassengerDto } from 'src/users/passengers/dto/create-passenger.dto';
+import { CreateDriverDto } from 'src/users/drivers/dto/create-driver.dto';
+import { Role } from 'src/users/enums/role.enum';
+import { SignInDto } from './dto/sign-in.dto';
 
 @Injectable()
 export class AuthenticationService {
     constructor(
         @InjectRepository(User) private readonly userRepository: Repository<User>,
+        @InjectRepository(Passenger) private readonly passengerRepository: Repository<Passenger>,
+        @InjectRepository(Driver) private readonly driverRepository: Repository<Driver>,
         private readonly hashingService: HashingService,
         private readonly jwtService: JwtService,
         @Inject(jwtConfig.KEY) private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
         private readonly refreshTokenIdsStorage: RefreshTokenIdsStorage,
     ) { }
 
-    async signUp(signUpDto: SignUpDto) {
+    async signUp(signUpDto: SignUpDto, createUserTypeDto: CreatePassengerDto | CreateDriverDto) {
         try {
-            const user = new User();
-            user.email = signUpDto.email;
-            user.password = await this.hashingService.hash(signUpDto.password);
+            const user = this.userRepository.create({
+                ...signUpDto,
+                password: await this.hashingService.hash(signUpDto.password),
+            });
 
             await this.userRepository.save(user);
+
+            if (signUpDto.role === Role.Passenger) {
+                const passenger = this.passengerRepository.create({
+                    ...createUserTypeDto as CreatePassengerDto,
+                    user: user
+                });
+
+                await this.passengerRepository.save(passenger);
+            } else if (signUpDto.role === Role.Driver) {
+                const driver = this.driverRepository.create({
+                    ...createUserTypeDto as CreateDriverDto,
+                    user: user
+                });
+
+                await this.driverRepository.save(driver);
+            }
 
             return this.generateTokens(user);
         } catch (error) {
@@ -41,7 +66,7 @@ export class AuthenticationService {
         }
     }
 
-    async signIn(signInDto: SignUpDto) {
+    async signIn(signInDto: SignInDto) {
         const user = await this.userRepository.findOneBy({
             email: signInDto.email,
         });
@@ -79,7 +104,7 @@ export class AuthenticationService {
 
     async refreshTokens(refreshTokenDto: RefreshTokenDto) {
         try {
-            const { sub, refreshTokenId } = await this.jwtService.verifyAsync<Pick<ActiveUserData, 'sub'> & { refreshTokenId: string } 
+            const { sub, refreshTokenId } = await this.jwtService.verifyAsync<Pick<ActiveUserData, 'sub'> & { refreshTokenId: string }
             >(refreshTokenDto.refreshToken, {
                 secret: this.jwtConfiguration.secret,
                 audience: this.jwtConfiguration.audience,

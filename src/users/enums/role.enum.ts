@@ -1,4 +1,6 @@
 export enum Role {
-    Regular = 'regular',
+    Passenger = 'passenger',
+    Driver = 'driver',
+    SuperAdmin = 'super-admin',
     Admin = 'admin',
 }

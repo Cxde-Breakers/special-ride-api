@@ -10,6 +10,8 @@ import { ActiveUserData } from '../interfaces/active-user.interface';
 import { OtpAuthenticationService } from './otp-authentication.service';
 import { Response } from 'express';
 import { toFileStream } from 'qrcode';
+import { CreatePassengerDto } from 'src/users/passengers/dto/create-passenger.dto';
+import { CreateDriverDto } from 'src/users/drivers/dto/create-driver.dto';
 
 @Auth(AuthType.None)
 @Controller('auth')
@@ -19,8 +21,8 @@ export class AuthenticationController {
     ) { }
 
     @Post('sign-up')
-    signUp(@Body() signUpDto: SignUpDto) {
-        return this.authenticationService.signUp(signUpDto);
+    signUp(@Body() signUpDto: SignUpDto, createUserTypeDto: CreatePassengerDto | CreateDriverDto) {
+        return this.authenticationService.signUp(signUpDto, createUserTypeDto);
     }
 
     @HttpCode(HttpStatus.OK)
