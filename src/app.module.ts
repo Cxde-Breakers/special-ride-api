@@ -10,6 +10,7 @@ import { CategoriesModule } from './categories/categories.module';
 import { SubcategoriesModule } from './subcategories/subcategories.module';
 import { TransactionsModule } from './transactions/transactions.module';
 import { BookingsModule } from './bookings/bookings.module';
+import { CountriesModule } from './countries/countries.module';
 
 @Module({
   imports: [
@@ -30,7 +31,8 @@ import { BookingsModule } from './bookings/bookings.module';
     CategoriesModule,
     SubcategoriesModule,
     TransactionsModule,
-    BookingsModule
+    BookingsModule,
+    CountriesModule
   ],
   controllers: [AppController],
   providers: [AppService],
