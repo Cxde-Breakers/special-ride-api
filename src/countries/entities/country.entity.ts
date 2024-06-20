@@ -1,5 +1,7 @@
 import { Status } from "src/shared/enums/status.enum";
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { CountryPerKmCost } from "./country-per-km-cost.entity";
+import { count } from "console";
 
 @Entity('countries')
 export class Country { 
@@ -59,6 +61,9 @@ export class Country {
 
     @UpdateDateColumn()
     updateAt: Date;
+
+    @OneToMany(() => CountryPerKmCost, cost => cost.country)
+    countryPerKmCost: CountryPerKmCost[];
 }
 
 
