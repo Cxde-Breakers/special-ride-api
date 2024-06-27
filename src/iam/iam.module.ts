@@ -18,6 +18,7 @@ import { Passenger } from 'src/users/passengers/entities/passenger.entity';
 import { Driver } from 'src/users/drivers/entities/driver.entity';
 import { Transaction } from 'src/transactions/entities/transaction.entity';
 import { Booking } from 'src/bookings/entities/booking.entity';
+import { OtpSmsAuthenticationService } from './authentication/otp-sms-authentication.service';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { Booking } from 'src/bookings/entities/booking.entity';
     RefreshTokenIdsStorage,
     AuthenticationService,
     OtpAuthenticationService,
+    OtpSmsAuthenticationService,
   ],
   controllers: [AuthenticationController],
 })

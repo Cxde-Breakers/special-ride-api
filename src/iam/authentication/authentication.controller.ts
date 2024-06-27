@@ -12,12 +12,15 @@ import { Response } from 'express';
 import { toFileStream } from 'qrcode';
 import { CreatePassengerDto } from 'src/users/passengers/dto/create-passenger.dto';
 import { CreateDriverDto } from 'src/users/drivers/dto/create-driver.dto';
+import { OtpDto } from './dto/otp.dto';
+import { OtpSmsAuthenticationService } from './otp-sms-authentication.service';
 
 @Auth(AuthType.None)
 @Controller('auth')
 export class AuthenticationController {
     constructor(private readonly authenticationService: AuthenticationService,
-        private readonly otpAuthenticationService: OtpAuthenticationService
+        private readonly otpAuthenticationService: OtpAuthenticationService,
+        private readonly otpSmsAuthenticationService: OtpSmsAuthenticationService,
     ) { }
 
     @Post('sign-up')
@@ -51,5 +54,17 @@ export class AuthenticationController {
         response.type('png');
 
         return toFileStream(response, uri);
+    }
+
+    @HttpCode(HttpStatus.OK)
+    @Post('otp')
+    async generateOtp(@Body() otpDto: OtpDto) {
+        return this.otpSmsAuthenticationService.sendVerificationCode(otpDto);
+    }
+
+    @HttpCode(HttpStatus.OK)
+    @Post('verify-otp')
+    async verifyOtp(@Body() otpDto: OtpDto) {
+        return this.otpSmsAuthenticationService.verifyCode(otpDto);
     }
 }

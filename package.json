@@ -38,7 +38,9 @@
     "qrcode": "^1.5.3",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
-    "typeorm": "^0.3.20"
+    "twilio": "^5.2.0",
+    "typeorm": "^0.3.20",
+    "webpack": "^5.92.1"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
