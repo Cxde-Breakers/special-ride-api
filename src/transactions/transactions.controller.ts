@@ -3,6 +3,8 @@ import { TransactionsService } from './transactions.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { Roles } from 'src/iam/authorization/decorators/roles.decorator';
+import { Role } from 'src/users/enums/role.enum';
 
 @ApiBearerAuth()
 @Controller('transactions')
@@ -29,6 +31,7 @@ export class TransactionsController {
     return this.transactionsService.update(id, updateTransactionDto);
   }
 
+  @Roles(Role.SuperAdmin)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.transactionsService.remove(id);

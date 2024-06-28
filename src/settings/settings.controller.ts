@@ -3,7 +3,10 @@ import { SettingsService } from './settings.service';
 import { CreateSettingDto } from './dto/create-setting.dto';
 import { UpdateSettingDto } from './dto/update-setting.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { Roles } from 'src/iam/authorization/decorators/roles.decorator';
+import { Role } from 'src/users/enums/role.enum';
 
+@Roles(Role.SuperAdmin)
 @ApiBearerAuth()
 @Controller('settings')
 export class SettingsController {
