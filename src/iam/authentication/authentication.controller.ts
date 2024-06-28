@@ -14,6 +14,7 @@ import { CreatePassengerDto } from 'src/users/passengers/dto/create-passenger.dt
 import { CreateDriverDto } from 'src/users/drivers/dto/create-driver.dto';
 import { OtpDto } from './dto/otp.dto';
 import { OtpSmsAuthenticationService } from './otp-sms-authentication.service';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Auth(AuthType.None)
 @Controller('auth')
@@ -40,6 +41,7 @@ export class AuthenticationController {
         return this.authenticationService.refreshTokens(refreshTokenDto);
     }
 
+    @ApiBearerAuth()
     @Auth(AuthType.Bearer)
     @HttpCode(HttpStatus.OK)
     @Post('2fa/generate')

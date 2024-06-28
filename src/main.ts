@@ -10,6 +10,7 @@ async function bootstrap() {
     .setTitle('Special Ride API')
     .setDescription('Special Ride API for Authentication and Authorization Management and Rides Management built with NestJS')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
