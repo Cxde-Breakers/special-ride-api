@@ -14,7 +14,7 @@ export class Passenger {
     @Column()
     lastName: string;
 
-    @Column()
+    @Column({ unique: true })
     phoneNumber: string;
 
     @OneToMany(() => Booking, booking => booking.passenger)

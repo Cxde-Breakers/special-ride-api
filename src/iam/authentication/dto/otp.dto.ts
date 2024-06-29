@@ -8,6 +8,5 @@ export class OtpDto {
     phoneNumber: string;
 
     @ApiProperty()
-    @IsNotEmpty()
     code?: string;
 }

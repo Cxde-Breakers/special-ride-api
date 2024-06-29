@@ -1,13 +1,22 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Twilio } from 'twilio';
 import { OtpDto } from './dto/otp.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/users/entities/user.entity';
+import { Repository } from 'typeorm';
+import { Passenger } from 'src/users/passengers/entities/passenger.entity';
+import { Driver } from 'src/users/drivers/entities/driver.entity';
 
 @Injectable()
 export class OtpSmsAuthenticationService {
     private twilioClient: Twilio;
 
-    constructor(private configService: ConfigService) {
+    constructor(
+        private configService: ConfigService,
+        @InjectRepository(Passenger) private readonly passengerRepository: Repository<Passenger>,
+        @InjectRepository(Driver) private readonly driverRepository: Repository<Driver>,
+    ) {
         this.twilioClient = new Twilio(
             this.configService.getOrThrow('TWILIO_ACCOUNT_SID'),
             this.configService.getOrThrow('TWILIO_AUTH_TOKEN')
@@ -15,15 +24,26 @@ export class OtpSmsAuthenticationService {
     }
 
     async sendVerificationCode(otpDto: OtpDto): Promise<string> {
-        const serviceSid = this.configService.getOrThrow('TWILIO_SERVICE_SID');
-        const verification = await this.twilioClient.verify.v2.services(serviceSid)
-            .verifications
-            .create({
-                to: otpDto.phoneNumber,
-                channel: 'sms',
-            });
+        try {
+            const passenger = await this.passengerRepository.findOneBy({ phoneNumber: otpDto.phoneNumber });
+            const driver = await this.driverRepository.findOneBy({ phoneNumber: otpDto.phoneNumber });
 
-        return verification.sid;
+            if (!passenger && !driver) {
+                throw new BadRequestException('No user found with this phone number');
+            }
+
+            const serviceSid = this.configService.getOrThrow('TWILIO_ACCOUNT_SID');
+            const verification = await this.twilioClient.verify.v2.services(serviceSid)
+                .verifications
+                .create({
+                    to: otpDto.phoneNumber,
+                    channel: 'sms',
+                });
+
+            return verification.sid;
+        } catch (error) {
+            throw new BadRequestException(error.message)
+        }
     }
 
     async verifyCode(otpDto: OtpDto): Promise<boolean> {

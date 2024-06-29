@@ -17,8 +17,11 @@ export class Driver {
     @Column('decimal', { precision: 10, scale: 2, default: 0.00 })
     balance: number;
 
-    // @Column()
-    // registrationDate: Date;
+    @Column({ unique: true })
+    phoneNumber: string;
+
+    @Column()
+    registrationDate: Date;
 
     @Column({ default: 0 })
     totalRides: number;
