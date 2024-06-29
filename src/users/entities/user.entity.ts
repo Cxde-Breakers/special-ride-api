@@ -22,10 +22,10 @@ export class User {
     @Column({ nullable: true })
     tfaSecret: string;
 
-    @Column()
+    @Column({ nullable: true })
     image: string;
 
-    @Column()
+    @Column({ nullable: true })
     emailVerifiedAt: Date;
 
     @OneToMany(() => Transaction, transaction => transaction.user)

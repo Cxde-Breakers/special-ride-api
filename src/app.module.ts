@@ -25,6 +25,9 @@ import { SettingsModule } from './settings/settings.module';
       password: process.env.DB_PASS,
       autoLoadEntities: true,
       synchronize: true,
+      ssl: {
+        rejectUnauthorized: false
+      }
     }),
     IamModule,
     UsersModule,
