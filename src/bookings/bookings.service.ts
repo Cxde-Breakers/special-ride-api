@@ -5,7 +5,7 @@ import { Booking } from './entities/booking.entity';
 import { Between, FindOptionsWhere, Like, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Status } from 'src/shared/enums/status.enum';
-import { FindBookingDto } from './dto/booking-query.dto';
+import { BookingQueryDto } from './dto/booking-query.dto';
 import { PaginationQueryDto } from 'src/shared/dto/pagination-query.dto';
 import { ActiveUserData } from 'src/iam/interfaces/active-user.interface';
 import { Role } from 'src/users/enums/role.enum';
@@ -35,9 +35,9 @@ export class BookingsService {
     }
   }
 
-  async findAll(findBookingDto: FindBookingDto, paginationQueryDto: PaginationQueryDto, activeUser: ActiveUserData) {
+  async findAll(BookingQueryDto: BookingQueryDto, paginationQueryDto: PaginationQueryDto, activeUser: ActiveUserData) {
     const { limit, offset } = paginationQueryDto;
-    const { pickupPoint, dropoffPoint, suggestedFareMin, suggestedFareMax, distanceMin, distanceMax, adminCommissionMin, adminCommissionMax, country } = findBookingDto;
+    const { pickupPoint, dropoffPoint, suggestedFareMin, suggestedFareMax, distanceMin, distanceMax, adminCommissionMin, adminCommissionMax, country } = BookingQueryDto;
 
     try {
       const conditions: FindOptionsWhere<Booking> | FindOptionsWhere<Booking[]> = {
