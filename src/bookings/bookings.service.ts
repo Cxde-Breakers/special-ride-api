@@ -49,6 +49,7 @@ export class BookingsService {
         ...(country ? { country: Like('%${country}%') } : {}),
         ...(activeUser.role === Role.Driver ? { driver: { id: activeUser.sub } } : {}),
         ...(activeUser.role === Role.Passenger ? { passenger: { id: activeUser.sub } } : {}),
+        ...({status: Status.Active}),
       }
 
       const bookings = await this.bookingRepository.find({

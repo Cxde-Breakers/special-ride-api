@@ -10,7 +10,7 @@ import { Status } from 'src/shared/enums/status.enum';
 export class SettingsService {
   constructor(
     @InjectRepository(Setting) private readonly settingRepository: Repository<Setting>
-  ) {}
+  ) { }
 
   async create(createSettingDto: CreateSettingDto) {
     try {
@@ -22,7 +22,7 @@ export class SettingsService {
 
       return {
         statusCode: HttpStatus.CREATED,
-        message: 'Setting was created successfully',
+        message: 'Setting  created successfully',
         data: setting
       }
     } catch (error) {
@@ -36,7 +36,7 @@ export class SettingsService {
 
       return {
         statusCode: HttpStatus.OK,
-        message: 'Settings were retrived successfully',
+        message: 'Settings retrived successfully',
         data: settings,
       }
     } catch (error) {
@@ -46,7 +46,7 @@ export class SettingsService {
 
   async findOne(id: string) {
     try {
-      const setting = await this.settingRepository.findOneBy({id});
+      const setting = await this.settingRepository.findOneBy({ id });
 
       if (!setting) {
         throw new NotFoundException(`Setting not found`);
@@ -68,7 +68,7 @@ export class SettingsService {
   async update(id: string, updateSettingDto: UpdateSettingDto) {
     try {
       const setting = await this.settingRepository.findOneBy({ id });
-      
+
       if (!setting) {
         throw new NotFoundException('Setting not found');
       }

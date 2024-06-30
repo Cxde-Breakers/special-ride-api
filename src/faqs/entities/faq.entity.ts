@@ -15,8 +15,8 @@ export class Faq {
     @Column({unique: true})
     order: number;
 
-    // @Column('enum', {enum: Status, default: Status.Active})
-    // status: Status;
+    @Column('enum', {enum: Status, default: Status.Active})
+    status: Status;
 
     @CreateDateColumn()
     createdAt: Date;

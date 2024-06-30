@@ -22,7 +22,7 @@ export class CountriesService {
 
       return {
         statusCode: HttpStatus.CREATED,
-        message: 'Country was created successfully',
+        message: 'Country created successfully',
         data: country
       }
     } catch (error) {
@@ -36,7 +36,7 @@ export class CountriesService {
 
       return {
         statusCode: HttpStatus.OK,
-        message: 'Countries were retrieved successfully',
+        message: 'Countries retrieved successfully',
         data: countries
       }
     } catch (error) {
@@ -79,7 +79,7 @@ export class CountriesService {
 
       return {
         statusCode: HttpStatus.OK,
-        message: 'Country was updated successfully',
+        message: 'Country  updated successfully',
       }
 
     } catch (error) {
@@ -104,7 +104,7 @@ export class CountriesService {
 
       return {
         statusCode: HttpStatus.OK,
-        message: 'Country was updated successfully',
+        message: 'Country  updated successfully',
       }
     } catch (error) {
       if (error instanceof NotFoundException) {

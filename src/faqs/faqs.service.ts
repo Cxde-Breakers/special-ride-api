@@ -45,7 +45,7 @@ export class FaqsService {
 
   async findOne(id: string) {
     try {
-      const faq = await this.faqRepository.findOneBy({id});
+      const faq = await this.faqRepository.findOneBy({ id });
 
       if (!faq) {
         throw new NotFoundException('FAQ not found');
@@ -78,7 +78,7 @@ export class FaqsService {
 
       return {
         statusCode: HttpStatus.ACCEPTED,
-        message: 'FAQ was updated successfully'
+        message: 'FAQ  updated successfully'
       }
 
     } catch (error) {
@@ -101,7 +101,7 @@ export class FaqsService {
 
       return {
         statusCode: HttpStatus.ACCEPTED,
-        message: 'FAQ was deleted successfully'
+        message: 'FAQ  deleted successfully'
       }
     } catch (error) {
       if (error instanceof NotFoundException) {

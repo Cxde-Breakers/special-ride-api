@@ -1,4 +1,5 @@
 import { Category } from "src/categories/entities/category.entity";
+import { Status } from "src/shared/enums/status.enum";
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity('subcategories')
@@ -12,8 +13,8 @@ export class Subcategory {
     @Column()
     order: number;
 
-    // @Column({ default: true })
-    // status: boolean;
+    @Column('enum', { enum: Status, default: Status.Active })
+    status: Status;
 
     @CreateDateColumn()
     createdAt: Date;
