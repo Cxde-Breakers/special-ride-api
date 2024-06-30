@@ -97,13 +97,11 @@ export class FaqsService {
         throw new NotFoundException('FAQ not found')
       }
 
-      await this.faqRepository.update(faq.id, {
-        status: !faq.status
-      })
+      await this.faqRepository.remove(faq);
 
       return {
         statusCode: HttpStatus.ACCEPTED,
-        message: 'FAQ disabled successfully'
+        message: 'FAQ was deleted successfully'
       }
     } catch (error) {
       if (error instanceof NotFoundException) {
