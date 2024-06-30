@@ -12,8 +12,8 @@ export class Subcategory {
     @Column()
     order: number;
 
-    @Column({ default: true })
-    status: boolean;
+    // @Column({ default: true })
+    // status: boolean;
 
     @CreateDateColumn()
     createdAt: Date;

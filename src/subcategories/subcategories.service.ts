@@ -3,7 +3,10 @@ import { CreateSubcategoryDto } from './dto/create-subcategory.dto';
 import { UpdateSubcategoryDto } from './dto/update-subcategory.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Subcategory } from './entities/subcategory.entity';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Like, Repository } from 'typeorm';
+import { SubCategoryQueryDto } from './dto/subcategory-query.dto';
+import { PaginationQueryDto } from 'src/shared/dto/pagination-query.dto';
+import { Status } from 'src/shared/enums/status.enum';
 
 @Injectable()
 export class SubcategoriesService {
@@ -32,12 +35,26 @@ export class SubcategoriesService {
     }
   }
 
-  async findAll() {
+  async findAll(subcategoryQueryDto: SubCategoryQueryDto, paginationQueryDto: PaginationQueryDto) {
+    const { limit, offset } = paginationQueryDto;
+    const { name, category, order } = subcategoryQueryDto;
+
     try {
-      const subcategories = await this.subcategoryRepository.find();
+      const conditions: FindOptionsWhere<Subcategory> | FindOptionsWhere<Subcategory[]> = {
+        ...(name ? { name: Like(`%${name}%`) } : {}),
+        ...(category ? { category: { id: category } } : {}),
+        ...(order ? { order } : {}),
+        ...({ status: Status.Active }),
+      }
+
+      const subcategories = await this.subcategoryRepository.find({
+        where: conditions,
+        take: limit,
+        skip: offset,
+      });
 
       return {
-        statusCode: HttpStatus.ACCEPTED,
+        statusCode: HttpStatus.OK,
         message: 'Subcategories retrieved successfully',
         data: subcategories
       }
@@ -55,7 +72,7 @@ export class SubcategoriesService {
       }
 
       return {
-        statusCode: HttpStatus.ACCEPTED,
+        statusCode: HttpStatus.OK,
         message: 'Subcategory retrieved successfully',
         data: subcategory
       }
@@ -80,11 +97,11 @@ export class SubcategoriesService {
         ...updateSubcategoryDto,
         category: {
           id: updateSubcategoryDto.category
-        } 
+        }
       });
 
       return {
-        statusCode: HttpStatus.ACCEPTED,
+        statusCode: HttpStatus.OK,
         message: 'Subcategory updated successfully',
       }
     } catch (error) {
@@ -103,12 +120,10 @@ export class SubcategoriesService {
         throw new NotFoundException('Subcategory not found');
       }
 
-      await this.subcategoryRepository.update(subcategory.id, {
-        status: !subcategory.status
-      });
+      await this.subcategoryRepository.remove(subcategory);
 
       return {
-        statusCode: HttpStatus.ACCEPTED,
+        statusCode: HttpStatus.OK,
         message: 'Subcategory disabled successfully',
       }
 
