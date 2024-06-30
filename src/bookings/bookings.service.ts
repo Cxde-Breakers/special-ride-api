@@ -2,9 +2,13 @@ import { BadRequestException, HttpStatus, Injectable, NotFoundException } from '
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { UpdateBookingDto } from './dto/update-booking.dto';
 import { Booking } from './entities/booking.entity';
-import { Repository } from 'typeorm';
+import { Between, FindOptionsWhere, Like, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Status } from 'src/shared/enums/status.enum';
+import { FindBookingDto } from './dto/booking-query.dto';
+import { PaginationQueryDto } from 'src/shared/dto/pagination-query.dto';
+import { ActiveUserData } from 'src/iam/interfaces/active-user.interface';
+import { Role } from 'src/users/enums/role.enum';
 
 @Injectable()
 export class BookingsService {
@@ -31,9 +35,27 @@ export class BookingsService {
     }
   }
 
-  async findAll() {
+  async findAll(findBookingDto: FindBookingDto, paginationQueryDto: PaginationQueryDto, activeUser: ActiveUserData) {
+    const { limit, offset } = paginationQueryDto;
+    const { pickupPoint, dropoffPoint, suggestedFareMin, suggestedFareMax, distanceMin, distanceMax, adminCommissionMin, adminCommissionMax, country } = findBookingDto;
+
     try {
-      const bookings = await this.bookingRepository.find();
+      const conditions: FindOptionsWhere<Booking> | FindOptionsWhere<Booking[]> = {
+        ...(pickupPoint ? { pickupPoint: Like(`%${pickupPoint}%`) } : {}),
+        ...(dropoffPoint ? { dropoffPoint: Like(`%${dropoffPoint}%`) } : {}),
+        ...(suggestedFareMin && suggestedFareMax ? { suggestedFare: Between(suggestedFareMin, suggestedFareMax) } : {}),
+        ...(distanceMin && distanceMax ? { distance: Between(distanceMin, distanceMax) } : {}),
+        ...(adminCommissionMin && adminCommissionMax ? { adminCommission: Between(adminCommissionMin, adminCommissionMax) } : {}),
+        ...(country ? { country: Like('%${country}%') } : {}),
+        ...(activeUser.role === Role.Driver ? { driver: { id: activeUser.sub } } : {}),
+        ...(activeUser.role === Role.Passenger ? { passenger: { id: activeUser.sub } } : {}),
+      }
+
+      const bookings = await this.bookingRepository.find({
+        where: conditions,
+        take: limit,
+        skip: offset,
+      });
 
       return {
         statusCode: HttpStatus.OK,

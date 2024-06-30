@@ -1,10 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { BookingsService } from './bookings.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { UpdateBookingDto } from './dto/update-booking.dto';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
 import { Roles } from 'src/iam/authorization/decorators/roles.decorator';
 import { Role } from 'src/users/enums/role.enum';
+import { PaginationQueryDto } from 'src/shared/dto/pagination-query.dto';
+import { FindBookingDto } from './dto/booking-query.dto';
+import { ActiveUser } from 'src/iam/decorators/active-user.decorator';
+import { ActiveUserData } from 'src/iam/interfaces/active-user.interface';
 
 @ApiBearerAuth()
 @Controller('bookings')
@@ -17,8 +21,8 @@ export class BookingsController {
   }
 
   @Get()
-  findAll() {
-    return this.bookingsService.findAll();
+  findAll(@Query() findBookingDto: FindBookingDto, @Query() paginationQuery: PaginationQueryDto, @ActiveUser() activeUser: ActiveUserData){
+    return this.bookingsService.findAll(findBookingDto, paginationQuery, activeUser);
   }
 
   @Get(':id')

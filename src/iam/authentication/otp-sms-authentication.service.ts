@@ -4,9 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { Twilio } from 'twilio';
 import { OtpDto } from './dto/otp.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
-import { Passenger } from 'src/users/passengers/entities/passenger.entity';
 import { Driver } from 'src/users/drivers/entities/driver.entity';
 import { AuthenticationService } from './authentication.service';
 
