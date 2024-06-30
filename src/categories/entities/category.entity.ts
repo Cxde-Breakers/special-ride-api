@@ -16,7 +16,7 @@ export class Category {
     @Column('enum', { enum: Status, default: Status.Active })
     status: Status;
 
-    @Column()
+    @Column({ nullable: true })
     image: string;
 
     @CreateDateColumn()

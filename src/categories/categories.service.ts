@@ -7,10 +7,13 @@ import { FindOptionsWhere, Like, Repository } from 'typeorm';
 import { Status } from 'src/shared/enums/status.enum';
 import { CategoryQueryDto } from './dto/category-query.dto';
 import { PaginationQueryDto } from 'src/shared/dto/pagination-query.dto';
+import { ApiConsumes } from '@nestjs/swagger';
 
 @Injectable()
 export class CategoriesService {
   constructor(@InjectRepository(Category) private readonly categoryRepository: Repository<Category>) { }
+
+  @ApiConsumes('multipart/form-data')
   async create(createCategoryDto: CreateCategoryDto) {
     try {
       const category = this.categoryRepository.create({

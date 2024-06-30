@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsNumber } from "class-validator";
+import { IsNotEmpty, IsPositive } from "class-validator";
 
 export class CreateCategoryDto {
     @ApiProperty()
@@ -8,10 +8,8 @@ export class CreateCategoryDto {
 
     @ApiProperty()
     @IsNotEmpty()
-    @IsNumber()
     order: number;
 
-    @ApiProperty()
-    @IsNotEmpty()
+    @ApiProperty({type: 'string', format: 'binary'})
     image: string;
 }
