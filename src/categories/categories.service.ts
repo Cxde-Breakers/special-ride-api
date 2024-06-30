@@ -3,7 +3,10 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Category } from './entities/category.entity';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Like, Repository } from 'typeorm';
+import { Status } from 'src/shared/enums/status.enum';
+import { CategoryQueryDto } from './dto/category-query.dto';
+import { PaginationQueryDto } from 'src/shared/dto/pagination-query.dto';
 
 @Injectable()
 export class CategoriesService {
@@ -26,12 +29,25 @@ export class CategoriesService {
     }
   }
 
-  async findAll() {
+  async findAll(categoryQueryDto: CategoryQueryDto, paginationQueryDto: PaginationQueryDto) {
+    const { limit, offset } = paginationQueryDto;
+    const { name, order } = categoryQueryDto;
+
     try {
-      const categories = await this.categoryRepository.find();
+      const conditions: FindOptionsWhere<Category> | FindOptionsWhere<Category[]> = {
+        ...(name ? { name: Like(`%${name}%`) } : {}),
+        ...(order ? { order } : {}),
+        ...({ status: Status.Active })
+      }
+
+      const categories = await this.categoryRepository.find({
+        where: conditions,
+        take: limit,
+        skip: offset,
+      });
 
       return {
-        statusCode: HttpStatus.ACCEPTED,
+        statusCode: HttpStatus.OK,
         message: 'Categories retrieved successfully',
         data: categories
       }
@@ -49,7 +65,7 @@ export class CategoriesService {
       }
 
       return {
-        statusCode: HttpStatus.ACCEPTED,
+        statusCode: HttpStatus.OK,
         message: 'Category retrieved successfully',
         data: category
       }
@@ -70,9 +86,9 @@ export class CategoriesService {
       }
 
       await this.categoryRepository.update(category.id, updateCategoryDto);
-      
+
       return {
-        statusCode: HttpStatus.ACCEPTED,
+        statusCode: HttpStatus.OK,
         message: 'Category updated successfully',
       }
     } catch (error) {
@@ -91,13 +107,11 @@ export class CategoriesService {
         throw new NotFoundException('Category not found');
       }
 
-      await this.categoryRepository.update(category.id, {
-        status: !category.status
-      });
+      await this.categoryRepository.remove(category);
 
       return {
-        statusCode: HttpStatus.ACCEPTED,
-        message: 'Category disabled successfully',
+        statusCode: HttpStatus.OK,
+        message: 'Category deleted successfully',
       }
     } catch (error) {
       if (error instanceof NotFoundException) {
