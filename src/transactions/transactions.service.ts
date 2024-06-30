@@ -3,9 +3,12 @@ import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Transaction } from './entities/transaction.entity';
-import { Repository } from 'typeorm';
-import e from 'express';
+import { Between, FindOptionsWhere, Like, Repository } from 'typeorm';
 import { Status } from 'src/shared/enums/status.enum';
+import { ActiveUserData } from 'src/iam/interfaces/active-user.interface';
+import { PaginationQueryDto } from 'src/shared/dto/pagination-query.dto';
+import { TransactionQueryDto } from './dto/transaction-query.dto';
+import { Role } from 'src/users/enums/role.enum';
 
 @Injectable()
 export class TransactionsService {
@@ -35,9 +38,25 @@ export class TransactionsService {
     }
   }
 
-  async findAll() {
+  async findAll(transactionQuery: TransactionQueryDto, paginationQuery: PaginationQueryDto, activeUser: ActiveUserData) {
+    const { limit, offset } = paginationQuery;
+    const { paymentMethod, amountPaidMin, amountPaidMax, country, paymentBy } = transactionQuery;
+
     try {
-      const transactions = await this.transactionRepository.find();
+      const conditions: FindOptionsWhere<Transaction> | FindOptionsWhere<Transaction[]> = {
+        ...(paymentMethod ? { paymentMethod: Like(`%${paymentMethod}%`) } : {}),
+        ...(amountPaidMin && amountPaidMax ? { amountPaid: Between(amountPaidMin, amountPaidMax) } : {}),
+        ...(country ? { country: Like(`%${country}%`) } : {}),
+        ...(paymentBy ? { paymentBy: { id: paymentBy } } : {}),
+        ...(activeUser.role === Role.Driver ? { paymentBy: { id: activeUser.sub } } : {}),
+        ...(activeUser.role === Role.Passenger ? { paymentBy: { id: activeUser.sub } } : {}),
+      }
+
+      const transactions = await this.transactionRepository.find({
+        where: conditions,
+        take: limit,
+        skip: offset,
+      });
 
       return {
         statusCode: HttpStatus.OK,
