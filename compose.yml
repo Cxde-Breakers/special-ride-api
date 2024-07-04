@@ -1,13 +1,13 @@
 services:
   db:
-    image: postgres
+    image: postgres:alpine
     restart: always
     ports:
-      - '5432:5432'
+      - "5432:5432"
     environment:
       POSTGRES_PASSWORD: pass123
   redis:
-   image: redis
+   image: redis:alpine
    ports: 
     - "6379:6379"
    restart: always

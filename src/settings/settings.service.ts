@@ -14,11 +14,20 @@ export class SettingsService {
 
   async create(createSettingDto: CreateSettingDto) {
     try {
-      const setting = this.settingRepository.create({
-        ...createSettingDto,
-      });
 
-      await this.settingRepository.save(setting);
+      let setting = await this.settingRepository.findOne({
+        where: {}
+      })
+
+     if (setting) {
+       await this.settingRepository.save(Object.assign(setting, createSettingDto));
+     } else {
+       setting = this.settingRepository.create({
+         ...createSettingDto,
+       });
+
+       await this.settingRepository.save(setting);
+     }
 
       return {
         statusCode: HttpStatus.CREATED,
