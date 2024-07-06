@@ -34,7 +34,9 @@ export class CategoriesController {
 
   @Roles(Role.SuperAdmin)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto) {
+  @UseInterceptors(FileInterceptor('image'))
+  update(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto, @UploadedFile() file: Express.Multer.File) {
+    updateCategoryDto.image = file && file.buffer.toString('base64');
     return this.categoriesService.update(id, updateCategoryDto);
   }
 

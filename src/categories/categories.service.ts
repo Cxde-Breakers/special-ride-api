@@ -89,7 +89,9 @@ export class CategoriesService {
         throw new NotFoundException('Category not found');
       }
 
-      await this.categoryRepository.update(category.id, updateCategoryDto);
+      await this.categoryRepository.update(category.id, {
+        ...updateCategoryDto
+      });
 
       return {
         statusCode: HttpStatus.OK,
