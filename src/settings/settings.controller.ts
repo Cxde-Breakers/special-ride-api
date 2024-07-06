@@ -1,10 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFiles } from '@nestjs/common';
 import { SettingsService } from './settings.service';
 import { CreateSettingDto } from './dto/create-setting.dto';
 import { UpdateSettingDto } from './dto/update-setting.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { Roles } from 'src/iam/authorization/decorators/roles.decorator';
 import { Role } from 'src/users/enums/role.enum';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
 
 @Roles(Role.SuperAdmin)
 @ApiBearerAuth()
@@ -13,7 +14,18 @@ export class SettingsController {
   constructor(private readonly settingsService: SettingsService) {}
 
   @Post()
-  create(@Body() createSettingDto: CreateSettingDto) {
+  @UseInterceptors(FileFieldsInterceptor([
+    { name: 'siteLogo', maxCount: 1 },
+    { name: 'seoImage', maxCount: 1 },
+    { name: 'favicon', maxCount: 1 },
+    { name: 'adminLogo', maxCount: 1 },
+  ]))
+  create(@Body() createSettingDto: CreateSettingDto, @UploadedFiles() files: { siteLogo?: Express.Multer.File[], seoImage?: Express.Multer.File[], favicon?: Express.Multer.File[], adminLogo?: Express.Multer.File[] }) {
+    createSettingDto.siteLogo = files.siteLogo ? files.siteLogo[0].buffer.toString('base64') : null;
+    createSettingDto.seoImage = files.seoImage ? files.seoImage[0].buffer.toString('base64') : null;
+    createSettingDto.favicon = files.favicon ? files.favicon[0].buffer.toString('base64') : null;
+    createSettingDto.adminLogo = files.adminLogo ? files.adminLogo[0].buffer.toString('base64') : null;
+
     return this.settingsService.create(createSettingDto);
   }
 
@@ -22,18 +34,18 @@ export class SettingsController {
     return this.settingsService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.settingsService.findOne(id);
-  }
+  // @Get(':id')
+  // findOne(@Param('id') id: string) {
+  //   return this.settingsService.findOne(id);
+  // }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSettingDto: UpdateSettingDto) {
-    return this.settingsService.update(id, updateSettingDto);
-  }
+  // @Patch(':id')
+  // update(@Param('id') id: string, @Body() updateSettingDto: UpdateSettingDto) {
+  //   return this.settingsService.update(id, updateSettingDto);
+  // }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.settingsService.remove(id);
-  }
+  // @Delete(':id')
+  // remove(@Param('id') id: string) {
+  //   return this.settingsService.remove(id);
+  // }
 }

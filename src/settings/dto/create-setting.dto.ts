@@ -2,16 +2,16 @@ import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty } from "class-validator";
 
 export class CreateSettingDto {
-    @ApiProperty()
-    @IsNotEmpty()
+    @ApiProperty({ type: 'string', format: 'binary' })
     siteLogo: string;
 
-    @ApiProperty()
-    @IsNotEmpty()
+    @ApiProperty({ type: 'string', format: 'binary' })
+    adminLogo: string;
+
+    @ApiProperty({ type: 'string', format: 'binary' })
     seoImage: string;
 
-    @ApiProperty()
-    @IsNotEmpty()
+    @ApiProperty({ type: 'string', format: 'binary' })
     favicon: string;
 
     @ApiProperty()
