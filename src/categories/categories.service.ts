@@ -47,6 +47,7 @@ export class CategoriesService {
         where: conditions,
         take: limit,
         skip: offset,
+        relations: ['subcategories']
       });
 
       return {
