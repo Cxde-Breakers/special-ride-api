@@ -16,6 +16,9 @@ export class User {
     @Column({ enum: Role, default: Role.Passenger })
     role: Role;
 
+    @Column({ nullable: true })
+    profilePicture: string;
+
     @Column({ default: false })
     isTfaEnabled: boolean;
 

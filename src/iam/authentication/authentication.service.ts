@@ -43,14 +43,20 @@ export class AuthenticationService {
             if (signUpDto.role === Role.Passenger) {
                 const passenger = this.passengerRepository.create({
                     ...createUserTypeDto as CreatePassengerDto,
-                    user: user
+                    user: user,
+                    country: {
+                        id: createUserTypeDto.country
+                    },
                 });
 
                 await this.passengerRepository.save(passenger);
             } else if (signUpDto.role === Role.Driver) {
                 const driver = this.driverRepository.create({
                     ...createUserTypeDto as CreateDriverDto,
-                    user: user
+                    user: user,
+                    country: {
+                        id: createUserTypeDto.country
+                    },
                 });
 
                 await this.driverRepository.save(driver);

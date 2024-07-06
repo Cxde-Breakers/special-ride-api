@@ -33,19 +33,4 @@ export class SettingsController {
   findAll() {
     return this.settingsService.findAll();
   }
-
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.settingsService.findOne(id);
-  // }
-
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateSettingDto: UpdateSettingDto) {
-  //   return this.settingsService.update(id, updateSettingDto);
-  // }
-
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.settingsService.remove(id);
-  // }
 }

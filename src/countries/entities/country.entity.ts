@@ -3,6 +3,8 @@ import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, Up
 import { CountryPerKmCost } from "./country-per-km-cost.entity";
 import { count } from "console";
 import { Admin } from "src/users/admins/entities/admin.entity";
+import { Driver } from "src/users/drivers/entities/driver.entity";
+import { Passenger } from "src/users/passengers/entities/passenger.entity";
 
 @Entity('countries')
 export class Country { 
@@ -68,6 +70,12 @@ export class Country {
 
     @OneToMany(() => Admin, admin => admin.country)
     admins: Admin[];
+
+    @OneToMany(() => Driver, driver => driver.country)
+    drivers: Driver[];
+
+    @OneToMany(() => Passenger, passenger => passenger.country)
+    passengers: Passenger[];
 }
 
 

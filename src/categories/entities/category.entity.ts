@@ -1,5 +1,6 @@
 import { Status } from "src/shared/enums/status.enum";
 import { Subcategory } from "src/subcategories/entities/subcategory.entity";
+import { Driver } from "src/users/drivers/entities/driver.entity";
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
 
 @Entity('categories')
@@ -27,4 +28,7 @@ export class Category {
 
     @OneToMany(() => Subcategory, subcategory => subcategory.category)
     subcategories: Subcategory[];
+
+    @OneToMany(() => Driver, driver => driver.category)
+    drivers: Driver[];
 }

@@ -1,12 +1,28 @@
-import { Gender } from "src/users/enums/gender.enum";
-import { Column, CreateDateColumn, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+
+import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { User } from '../../entities/user.entity';
 import { Booking } from "src/bookings/entities/booking.entity";
+import { Gender } from "src/users/enums/gender.enum";
+import { Country } from "src/countries/entities/country.entity";
+import { Category } from "src/categories/entities/category.entity";
+import { Subcategory } from "src/subcategories/entities/subcategory.entity";
 
 @Entity('drivers')
 export class Driver {
     @PrimaryGeneratedColumn('uuid')
     id: string;
+
+    @Column()
+    firstName: string;
+
+    @Column()
+    lastName: string;
+
+    @Column('enum', { enum: Gender })
+    gender: Gender;
+
+    @Column()
+    address: string;
 
     @Column({ unique: true })
     registrationNumber: string;
@@ -20,26 +36,11 @@ export class Driver {
     @Column({ unique: true })
     phoneNumber: string;
 
-    @Column()
-    registrationDate: Date;
-
     @Column({ default: 0 })
     totalRides: number;
 
     @Column()
-    country: string;
-
-    @Column('decimal', { precision: 10, scale: 6 })
-    latitude: number;
-
-    @Column('decimal', { precision: 10, scale: 6 })
-    longitude: number;
-
-    @Column()
     age: number;
-
-    @Column('enum', { enum: Gender })
-    gender: Gender;
 
     @Column()
     vehicle: string;
@@ -79,4 +80,13 @@ export class Driver {
 
     @OneToMany(() => Booking, booking => booking.driver)
     bookings: Booking[];
+
+    @ManyToOne(() => Country, country => country.drivers)
+    country: Country;
+
+    @ManyToOne(() => Category, category => category.drivers)
+    category: Category;
+
+    @ManyToOne(() => Subcategory, subcategory => subcategory.drivers)
+    subcategory: Subcategory;
 }

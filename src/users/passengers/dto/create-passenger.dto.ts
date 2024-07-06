@@ -12,6 +12,10 @@ export class CreatePassengerDto {
 
     @ApiProperty()
     @IsNotEmpty()
+    country: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
     @IsPhoneNumber()
     phoneNumber: string;
 }
