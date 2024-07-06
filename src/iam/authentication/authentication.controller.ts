@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, HttpStatus, Post, Res } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post, Res, UseInterceptors } from '@nestjs/common';
 import { AuthenticationService } from './authentication.service';
 import { SignUpDto } from './dto/sign-up.dto';
 import { SignInDto } from './dto/sign-in.dto';
@@ -15,6 +15,9 @@ import { CreateDriverDto } from 'src/users/drivers/dto/create-driver.dto';
 import { OtpDto } from './dto/otp.dto';
 import { OtpSmsAuthenticationService } from './otp-sms-authentication.service';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { CreateAdminDto } from 'src/users/admins/dto/create-admin.dto';
+import { CreateSuperadminDto } from 'src/users/superadmins/dto/create-superadmin.dto';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
 
 @Auth(AuthType.None)
 @Controller('auth')
@@ -25,7 +28,31 @@ export class AuthenticationController {
     ) { }
 
     @Post('sign-up')
-    signUp(@Body() signUpDto: SignUpDto, createUserTypeDto: CreatePassengerDto | CreateDriverDto) {
+    @UseInterceptors(FileFieldsInterceptor([
+        { name: 'profilePicture', maxCount: 1 },
+        { name: 'idFront', maxCount: 1 },
+        { name: 'idBack', maxCount: 1 },
+        { name: 'vehiclePhoto', maxCount: 1 },
+        { name: 'vehicleRegistrationPhotoFront', maxCount: 1 },
+        { name: 'vehicleRegistrationPhotoBack', maxCount: 1 },
+        { name: 'driversLicensePhotoFront', maxCount: 1 },
+        { name: 'driversLicensePhotoBack', maxCount: 1 },
+    ]))
+    signUp(@Body() signUpDto: SignUpDto, createUserTypeDto: CreatePassengerDto | CreateDriverDto | CreateAdminDto | CreateSuperadminDto, files: { profilePicture?: Express.Multer.File[], idFront?: Express.Multer.File[], idBack?: Express.Multer.File[], vehiclePhoto?: Express.Multer.File[], vehicleRegistrationPhotoFront?: Express.Multer.File[], vehicleRegistrationPhotoBack?: Express.Multer.File[], driversLicensePhotoFront?: Express.Multer.File[], driversLicensePhotoBack?: Express.Multer.File[] }) {
+        createUserTypeDto.profilePicture = files.profilePicture && files.profilePicture[0].buffer.toString('base64');
+
+        if (createUserTypeDto instanceof CreatePassengerDto || createUserTypeDto instanceof CreateDriverDto ) {
+            createUserTypeDto.idFront = files.idFront && files.idFront[0].buffer.toString('base64');
+            createUserTypeDto.idBack = files.idBack && files.idBack[0].buffer.toString('base64');
+        }
+
+        if (createUserTypeDto instanceof CreateDriverDto) {
+            createUserTypeDto.vehiclePhoto = files.vehiclePhoto && files.vehiclePhoto[0].buffer.toString('base64');
+            createUserTypeDto.vehicleRegistrationPhotoFront = files.driversLicensePhotoFront && files.driversLicensePhotoFront[0].buffer.toString('base64');
+            createUserTypeDto.driversLicensePhotoFront = files.driversLicensePhotoFront && files.driversLicensePhotoFront[0].buffer.toString('base64');
+            createUserTypeDto.driversLicensePhotoBack = files.driversLicensePhotoBack && files.driversLicensePhotoBack[0].buffer.toString('base64');
+        }
+
         return this.authenticationService.signUp(signUpDto, createUserTypeDto);
     }
 
@@ -48,7 +75,7 @@ export class AuthenticationController {
     async generateQrCode(
         @ActiveUser() activeUser: ActiveUserData,
         @Res() response: Response,
-    ) { 
+    ) {
         const { secret, uri } = await this.otpAuthenticationService.generateSecret(activeUser.email);
 
         await this.otpAuthenticationService.enableTfaForUser(activeUser.email, secret);

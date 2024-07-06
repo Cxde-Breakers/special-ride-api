@@ -5,6 +5,7 @@ import { count } from "console";
 import { Admin } from "src/users/admins/entities/admin.entity";
 import { Driver } from "src/users/drivers/entities/driver.entity";
 import { Passenger } from "src/users/passengers/entities/passenger.entity";
+import { Superadmin } from "src/users/superadmins/entities/superadmin.entity";
 
 @Entity('countries')
 export class Country { 
@@ -76,6 +77,9 @@ export class Country {
 
     @OneToMany(() => Passenger, passenger => passenger.country)
     passengers: Passenger[];
+
+    @OneToMany(() => Superadmin, superadmin => superadmin.country)
+    superadmins: Superadmin[];
 }
 
 

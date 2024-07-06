@@ -18,6 +18,10 @@ import { CreatePassengerDto } from 'src/users/passengers/dto/create-passenger.dt
 import { CreateDriverDto } from 'src/users/drivers/dto/create-driver.dto';
 import { Role } from 'src/users/enums/role.enum';
 import { SignInDto } from './dto/sign-in.dto';
+import { Superadmin } from 'src/users/superadmins/entities/superadmin.entity';
+import { CreateAdminDto } from 'src/users/admins/dto/create-admin.dto';
+import { Admin } from 'src/users/admins/entities/admin.entity';
+import { CreateSuperadminDto } from 'src/users/superadmins/dto/create-superadmin.dto';
 
 @Injectable()
 export class AuthenticationService {
@@ -25,13 +29,15 @@ export class AuthenticationService {
         @InjectRepository(User) private readonly userRepository: Repository<User>,
         @InjectRepository(Passenger) private readonly passengerRepository: Repository<Passenger>,
         @InjectRepository(Driver) private readonly driverRepository: Repository<Driver>,
+        @InjectRepository(Admin) private readonly adminRepository: Repository<Admin>,
+        @InjectRepository(Superadmin) private readonly superAdminRepository: Repository<Superadmin>,
         private readonly hashingService: HashingService,
         private readonly jwtService: JwtService,
         @Inject(jwtConfig.KEY) private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
         private readonly refreshTokenIdsStorage: RefreshTokenIdsStorage,
     ) { }
 
-    async signUp(signUpDto: SignUpDto, createUserTypeDto: CreatePassengerDto | CreateDriverDto) {
+    async signUp(signUpDto: SignUpDto, createUserTypeDto: CreatePassengerDto | CreateDriverDto | CreateAdminDto | CreateSuperadminDto) {
         try {
             const user = this.userRepository.create({
                 ...signUpDto,
@@ -41,28 +47,49 @@ export class AuthenticationService {
             await this.userRepository.save(user);
 
             if (signUpDto.role === Role.Passenger) {
-                const passenger = this.passengerRepository.create({
+                await this.passengerRepository.save({
                     ...createUserTypeDto as CreatePassengerDto,
                     user: {
                         ...user,
                         profilePicture: createUserTypeDto.profilePicture
                     },
                     country: {
-                        id: createUserTypeDto.country
+                        id: createUserTypeDto.country,
                     },
                 });
-
-                await this.passengerRepository.save(passenger);
             } else if (signUpDto.role === Role.Driver) {
-                const driver = this.driverRepository.create({
+                await this.driverRepository.save({
                     ...createUserTypeDto as CreateDriverDto,
-                    user: user,
+                    user: {
+                        ...user,
+                        profilePicture: createUserTypeDto.profilePicture
+                    },
                     country: {
-                        id: createUserTypeDto.country
+                        id: createUserTypeDto.country,
                     },
                 });
-
-                await this.driverRepository.save(driver);
+            } else if (signUpDto.role === Role.Admin) {
+                await this.adminRepository.save({
+                    ...createUserTypeDto as CreateAdminDto,
+                    user: {
+                        ...user,
+                        profilePicture: createUserTypeDto.profilePicture,
+                    },
+                    country: {
+                        id: createUserTypeDto.country,
+                    }
+                });
+            } else if (signUpDto.role === Role.SuperAdmin) {
+                await this.superAdminRepository.save({
+                    ...createUserTypeDto as CreateSuperadminDto,
+                    user: {
+                        ...user,
+                        profilePicture: createUserTypeDto.profilePicture,
+                    },
+                    country: {
+                        id: createUserTypeDto.country,
+                    }
+                })
             }
 
             return this.generateTokens(user);

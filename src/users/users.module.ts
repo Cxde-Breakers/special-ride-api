@@ -4,10 +4,11 @@ import { Module } from '@nestjs/common';
 import { PassengersModule } from './passengers/passengers.module';
 import { DriversModule } from './drivers/drivers.module';
 import { AdminsModule } from './admins/admins.module';
+import { SuperadminsModule } from './superadmins/superadmins.module';
 
 @Module({
   // controllers: [UsersController],
   // providers: [UsersService],
-  imports: [PassengersModule, DriversModule, AdminsModule],
+  imports: [PassengersModule, DriversModule, AdminsModule, SuperadminsModule],
 })
 export class UsersModule {}

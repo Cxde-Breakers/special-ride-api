@@ -19,10 +19,12 @@ import { Driver } from 'src/users/drivers/entities/driver.entity';
 import { Transaction } from 'src/transactions/entities/transaction.entity';
 import { Booking } from 'src/bookings/entities/booking.entity';
 import { OtpSmsAuthenticationService } from './authentication/otp-sms-authentication.service';
+import { Admin } from 'src/users/admins/entities/admin.entity';
+import { Superadmin } from 'src/users/superadmins/entities/superadmin.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, Passenger, Driver, Transaction, Booking]),
+    TypeOrmModule.forFeature([User, Passenger, Driver, Transaction, Booking, Admin, Superadmin]),
     JwtModule.registerAsync(jwtConfig.asProvider()),
     ConfigModule.forFeature(jwtConfig),
   ],
