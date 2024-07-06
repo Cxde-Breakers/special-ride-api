@@ -43,7 +43,10 @@ export class AuthenticationService {
             if (signUpDto.role === Role.Passenger) {
                 const passenger = this.passengerRepository.create({
                     ...createUserTypeDto as CreatePassengerDto,
-                    user: user,
+                    user: {
+                        ...user,
+                        profilePicture: createUserTypeDto.profilePicture
+                    },
                     country: {
                         id: createUserTypeDto.country
                     },

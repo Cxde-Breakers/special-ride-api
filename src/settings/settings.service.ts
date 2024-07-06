@@ -24,7 +24,6 @@ export class SettingsService {
        await this.settingRepository.save(Object.assign(setting, {
          ...createSettingDto,
          siteLogo: createSettingDto.siteLogo ? createSettingDto.siteLogo : setting.siteLogo,
-         adminLogo: createSettingDto.adminLogo ? createSettingDto.adminLogo : setting.adminLogo,
          seoImage: createSettingDto.seoImage ? createSettingDto.seoImage : setting.seoImage,
          favicon: createSettingDto.favicon ? createSettingDto.favicon : setting.favicon,
        }));

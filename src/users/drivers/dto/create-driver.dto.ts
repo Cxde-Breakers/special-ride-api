@@ -34,16 +34,6 @@ export class CreateDriverDto {
     @ApiProperty()
     @IsNotEmpty()
     @IsNumber()
-    latitude: number;
-
-    @ApiProperty()
-    @IsNotEmpty()
-    @IsNumber()
-    longitude: number;
-
-    @ApiProperty()
-    @IsNotEmpty()
-    @IsNumber()
     age: number;
 
     @ApiProperty({ enum: Gender })
@@ -52,39 +42,39 @@ export class CreateDriverDto {
     gender: Gender;
 
     @ApiProperty()
-    @IsNotEmpty() 
+    @IsNotEmpty()
     vehicle: string;
 
     @ApiProperty()
     @IsNotEmpty()
     color: string;
 
-    @ApiProperty()
+    @ApiProperty({ type: 'string', format: 'binary' })
     @IsNotEmpty()
     idFront: string;
 
-    @ApiProperty()
+    @ApiProperty({ type: 'string', format: 'binary' })
     @IsNotEmpty()
     idBack: string;
 
-    @ApiProperty()
+    @ApiProperty({ type: 'string', format: 'binary' })
     @IsNotEmpty()
     vehiclePhoto: string;
 
-    @ApiProperty()
+    @ApiProperty({ type: 'string', format: 'binary' })
     @IsNotEmpty()
     vehicleRegistrationPhotoFront: string;
 
-    @ApiProperty()
-    @IsNotEmpty()
+    @ApiProperty({ type: 'string', format: 'binary' })
     vehicleRegistrationPhotoBack: string;
 
-    @ApiProperty()
-    @IsNotEmpty()
+    @ApiProperty({ type: 'string', format: 'binary' })
     driversLicensePhotoFront: string;
 
-    @ApiProperty()
-    @IsNotEmpty()
+    @ApiProperty({ type: 'string', format: 'binary' })
     driversLicensePhotoBack: string;
+
+    @ApiProperty({ type: 'string', format: 'binary' })
+    profilePicture: string;
 }
 

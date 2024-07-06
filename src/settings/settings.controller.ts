@@ -18,13 +18,11 @@ export class SettingsController {
     { name: 'siteLogo', maxCount: 1 },
     { name: 'seoImage', maxCount: 1 },
     { name: 'favicon', maxCount: 1 },
-    { name: 'adminLogo', maxCount: 1 },
   ]))
   create(@Body() createSettingDto: CreateSettingDto, @UploadedFiles() files: { siteLogo?: Express.Multer.File[], seoImage?: Express.Multer.File[], favicon?: Express.Multer.File[], adminLogo?: Express.Multer.File[] }) {
     createSettingDto.siteLogo = files.siteLogo ? files.siteLogo[0].buffer.toString('base64') : null;
     createSettingDto.seoImage = files.seoImage ? files.seoImage[0].buffer.toString('base64') : null;
     createSettingDto.favicon = files.favicon ? files.favicon[0].buffer.toString('base64') : null;
-    createSettingDto.adminLogo = files.adminLogo ? files.adminLogo[0].buffer.toString('base64') : null;
 
     return this.settingsService.create(createSettingDto);
   }

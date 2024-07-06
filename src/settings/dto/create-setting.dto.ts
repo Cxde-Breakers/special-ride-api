@@ -5,7 +5,7 @@ export class CreateSettingDto {
     @ApiProperty({ type: 'string', format: 'binary' })
     siteLogo: string;
 
-    @ApiProperty({ type: 'string', format: 'binary' })
+    @ApiProperty({ type: 'string', format: 'binary', required: false })
     adminLogo: string;
 
     @ApiProperty({ type: 'string', format: 'binary' })

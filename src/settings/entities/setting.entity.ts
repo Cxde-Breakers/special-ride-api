@@ -10,9 +10,6 @@ export class Setting {
     siteLogo: string;
 
     @Column()
-    adminLogo: string;
-
-    @Column()
     seoImage: string;
 
     @Column()
