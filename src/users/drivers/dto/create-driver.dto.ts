@@ -50,19 +50,15 @@ export class CreateDriverDto {
     color: string;
 
     @ApiProperty({ type: 'string', format: 'binary' })
-    @IsNotEmpty()
     idFront: string;
 
     @ApiProperty({ type: 'string', format: 'binary' })
-    @IsNotEmpty()
     idBack: string;
 
     @ApiProperty({ type: 'string', format: 'binary' })
-    @IsNotEmpty()
     vehiclePhoto: string;
 
     @ApiProperty({ type: 'string', format: 'binary' })
-    @IsNotEmpty()
     vehicleRegistrationPhotoFront: string;
 
     @ApiProperty({ type: 'string', format: 'binary' })

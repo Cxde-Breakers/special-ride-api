@@ -1,5 +1,5 @@
 
-import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { User } from '../../entities/user.entity';
 import { Booking } from "src/bookings/entities/booking.entity";
 import { Gender } from "src/users/enums/gender.enum";
@@ -54,6 +54,9 @@ export class Driver {
     @Column()
     idBack: string;
 
+    @Column({ nullable: true })
+    profilePicture: string;
+
     @Column()
     vehiclePhoto: string;
 
@@ -76,6 +79,7 @@ export class Driver {
     updatedAt: Date;
 
     @OneToOne(() => User)
+    @JoinColumn()
     user: User;
 
     @OneToMany(() => Booking, booking => booking.driver)

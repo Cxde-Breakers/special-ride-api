@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, HttpStatus, Post, Res, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post, Res, UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { AuthenticationService } from './authentication.service';
 import { SignUpDto } from './dto/sign-up.dto';
 import { SignInDto } from './dto/sign-in.dto';
@@ -18,6 +18,7 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 import { CreateAdminDto } from 'src/users/admins/dto/create-admin.dto';
 import { CreateSuperadminDto } from 'src/users/superadmins/dto/create-superadmin.dto';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
+import { Role } from 'src/users/enums/role.enum';
 
 @Auth(AuthType.None)
 @Controller('auth')
@@ -38,19 +39,31 @@ export class AuthenticationController {
         { name: 'driversLicensePhotoFront', maxCount: 1 },
         { name: 'driversLicensePhotoBack', maxCount: 1 },
     ]))
-    signUp(@Body() signUpDto: SignUpDto, createUserTypeDto: CreatePassengerDto | CreateDriverDto | CreateAdminDto | CreateSuperadminDto, files: { profilePicture?: Express.Multer.File[], idFront?: Express.Multer.File[], idBack?: Express.Multer.File[], vehiclePhoto?: Express.Multer.File[], vehicleRegistrationPhotoFront?: Express.Multer.File[], vehicleRegistrationPhotoBack?: Express.Multer.File[], driversLicensePhotoFront?: Express.Multer.File[], driversLicensePhotoBack?: Express.Multer.File[] }) {
-        createUserTypeDto.profilePicture = files.profilePicture && files.profilePicture[0].buffer.toString('base64');
+    signUp(@Body() signUpDto: SignUpDto, @Body() createUserTypeDto: any,
+        @UploadedFiles() files: {
+            profilePicture?: Express.Multer.File[],
+            idFront?: Express.Multer.File[],
+            idBack?: Express.Multer.File[],
+            vehiclePhoto?: Express.Multer.File[],
+            vehicleRegistrationPhotoFront?: Express.Multer.File[],
+            vehicleRegistrationPhotoBack?: Express.Multer.File[],
+            driversLicensePhotoFront?: Express.Multer.File[],
+            driversLicensePhotoBack?: Express.Multer.File[]
+        }) {
 
-        if (createUserTypeDto instanceof CreatePassengerDto || createUserTypeDto instanceof CreateDriverDto ) {
-            createUserTypeDto.idFront = files.idFront && files.idFront[0].buffer.toString('base64');
-            createUserTypeDto.idBack = files.idBack && files.idBack[0].buffer.toString('base64');
+        createUserTypeDto.profilePicture = files.profilePicture ? files.profilePicture[0].buffer.toString('base64') : null;
+
+        if (signUpDto.role === Role.Passenger || signUpDto.role === Role.Driver) {
+            createUserTypeDto.idFront = files.idFront ? files.idFront[0].buffer.toString('base64') : null;
+            createUserTypeDto.idBack = files.idBack ? files.idBack[0].buffer.toString('base64') : null;
         }
 
-        if (createUserTypeDto instanceof CreateDriverDto) {
-            createUserTypeDto.vehiclePhoto = files.vehiclePhoto && files.vehiclePhoto[0].buffer.toString('base64');
-            createUserTypeDto.vehicleRegistrationPhotoFront = files.driversLicensePhotoFront && files.driversLicensePhotoFront[0].buffer.toString('base64');
-            createUserTypeDto.driversLicensePhotoFront = files.driversLicensePhotoFront && files.driversLicensePhotoFront[0].buffer.toString('base64');
-            createUserTypeDto.driversLicensePhotoBack = files.driversLicensePhotoBack && files.driversLicensePhotoBack[0].buffer.toString('base64');
+        if (signUpDto.role === Role.Driver) {
+            createUserTypeDto.vehiclePhoto = files.vehiclePhoto ? files.vehiclePhoto[0].buffer.toString('base64') : null;
+            createUserTypeDto.vehicleRegistrationPhotoFront = files.vehicleRegistrationPhotoFront ? files.vehicleRegistrationPhotoFront[0].buffer.toString('base64') : null;
+            createUserTypeDto.vehicleRegistrationPhotoBack = files.vehicleRegistrationPhotoBack ? files.driversLicensePhotoBack[0].buffer.toString('base64') : null;
+            createUserTypeDto.driversLicensePhotoFront = files.driversLicensePhotoFront ? files.driversLicensePhotoFront[0].buffer.toString('base64') : null;
+            createUserTypeDto.driversLicensePhotoBack = files.driversLicensePhotoBack ? files.driversLicensePhotoBack[0].buffer.toString('base64') : null;
         }
 
         return this.authenticationService.signUp(signUpDto, createUserTypeDto);

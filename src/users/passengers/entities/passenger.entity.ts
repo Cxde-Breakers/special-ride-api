@@ -2,7 +2,7 @@ import { Booking } from "src/bookings/entities/booking.entity";
 import { Country } from "src/countries/entities/country.entity";
 import { User } from "src/users/entities/user.entity";
 import { Gender } from "src/users/enums/gender.enum";
-import { Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 
 @Entity('passengers')
@@ -34,10 +34,14 @@ export class Passenger {
     @Column()
     address: string;
 
+    @Column({ nullable: true })
+    profilePicture: string;
+
     @OneToMany(() => Booking, booking => booking.passenger)
     bookings: Booking[];
 
     @OneToOne(() => User)
+    @JoinColumn()
     user: User;
 
     @ManyToOne(() => Country, country => country.passengers)

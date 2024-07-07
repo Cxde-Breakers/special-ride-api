@@ -1,4 +1,4 @@
-import { ConflictException, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
@@ -22,6 +22,7 @@ import { Superadmin } from 'src/users/superadmins/entities/superadmin.entity';
 import { CreateAdminDto } from 'src/users/admins/dto/create-admin.dto';
 import { Admin } from 'src/users/admins/entities/admin.entity';
 import { CreateSuperadminDto } from 'src/users/superadmins/dto/create-superadmin.dto';
+import { Country } from 'src/countries/entities/country.entity';
 
 @Injectable()
 export class AuthenticationService {
@@ -31,6 +32,7 @@ export class AuthenticationService {
         @InjectRepository(Driver) private readonly driverRepository: Repository<Driver>,
         @InjectRepository(Admin) private readonly adminRepository: Repository<Admin>,
         @InjectRepository(Superadmin) private readonly superAdminRepository: Repository<Superadmin>,
+        @InjectRepository(Country) private readonly countryRepository: Repository<Country>,
         private readonly hashingService: HashingService,
         private readonly jwtService: JwtService,
         @Inject(jwtConfig.KEY) private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
@@ -47,58 +49,55 @@ export class AuthenticationService {
             await this.userRepository.save(user);
 
             if (signUpDto.role === Role.Passenger) {
-                await this.passengerRepository.save({
+                const passenger = this.passengerRepository.create({
                     ...createUserTypeDto as CreatePassengerDto,
-                    user: {
-                        ...user,
-                        profilePicture: createUserTypeDto.profilePicture
-                    },
+                    user,
                     country: {
-                        id: createUserTypeDto.country,
+                        id: createUserTypeDto.country
                     },
                 });
+
+                await this.passengerRepository.save(passenger)
             } else if (signUpDto.role === Role.Driver) {
-                await this.driverRepository.save({
+                const driver = this.driverRepository.create({
                     ...createUserTypeDto as CreateDriverDto,
-                    user: {
-                        ...user,
-                        profilePicture: createUserTypeDto.profilePicture
-                    },
+                    user,
                     country: {
-                        id: createUserTypeDto.country,
+                        id: createUserTypeDto.country
                     },
                 });
+
+                await this.driverRepository.save(driver);
             } else if (signUpDto.role === Role.Admin) {
-                await this.adminRepository.save({
+                const admin = this.adminRepository.create({
                     ...createUserTypeDto as CreateAdminDto,
-                    user: {
-                        ...user,
-                        profilePicture: createUserTypeDto.profilePicture,
-                    },
+                    user,
                     country: {
-                        id: createUserTypeDto.country,
-                    }
+                        id: createUserTypeDto.country
+                    },
                 });
+
+                await this.adminRepository.save(admin);
             } else if (signUpDto.role === Role.SuperAdmin) {
-                await this.superAdminRepository.save({
+                const superadmin = this.superAdminRepository.create({
                     ...createUserTypeDto as CreateSuperadminDto,
-                    user: {
-                        ...user,
-                        profilePicture: createUserTypeDto.profilePicture,
-                    },
+                    user,
                     country: {
-                        id: createUserTypeDto.country,
-                    }
+                        id: createUserTypeDto.country
+                    },
                 })
+
+                await this.superAdminRepository.save(superadmin);
             }
 
             return this.generateTokens(user);
         } catch (error) {
+            console.log(error);
             const pgUniqueViolationErrorCode = '23505';
             if (error.code === pgUniqueViolationErrorCode) {
                 throw new ConflictException('User already exists');
             }
-            throw error;
+            throw new BadRequestException(error.message);
         }
     }
 

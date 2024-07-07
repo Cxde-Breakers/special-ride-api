@@ -21,10 +21,11 @@ import { Booking } from 'src/bookings/entities/booking.entity';
 import { OtpSmsAuthenticationService } from './authentication/otp-sms-authentication.service';
 import { Admin } from 'src/users/admins/entities/admin.entity';
 import { Superadmin } from 'src/users/superadmins/entities/superadmin.entity';
+import { Country } from 'src/countries/entities/country.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, Passenger, Driver, Transaction, Booking, Admin, Superadmin]),
+    TypeOrmModule.forFeature([User, Passenger, Driver, Transaction, Booking, Admin, Superadmin, Country]),
     JwtModule.registerAsync(jwtConfig.asProvider()),
     ConfigModule.forFeature(jwtConfig),
   ],
