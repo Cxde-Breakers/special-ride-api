@@ -1,9 +1,8 @@
 import { BadRequestException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
-import { CreateDriverDto } from './dto/create-driver.dto';
 import { UpdateDriverDto } from './dto/update-driver.dto';
-import { InstanceChecker, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Driver } from './entities/driver.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class DriversService {
@@ -14,7 +13,7 @@ export class DriversService {
   async findAll() {
     try {
       const drivers = await this.driverRepository.find({
-        relations: ['country', 'user', 'bookings', 'category', 'subcategory']
+        relations: ['country', 'bookings', 'category', 'subcategory']
       });
 
       return {
@@ -33,7 +32,7 @@ export class DriversService {
         where: {
           id
         },
-        relations: ['country', 'user', 'bookings', 'category', 'subcategory']
+        relations: ['country', 'bookings', 'category', 'subcategory']
       });
 
       if (!driver) {

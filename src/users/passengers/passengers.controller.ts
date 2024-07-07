@@ -9,11 +9,6 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 export class PassengersController {
   constructor(private readonly passengersService: PassengersService) {}
 
-  @Post()
-  create(@Body() createPassengerDto: CreatePassengerDto) {
-    return this.passengersService.create(createPassengerDto);
-  }
-
   @Get()
   findAll() {
     return this.passengersService.findAll();
@@ -21,16 +16,16 @@ export class PassengersController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.passengersService.findOne(+id);
+    return this.passengersService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updatePassengerDto: UpdatePassengerDto) {
-    return this.passengersService.update(+id, updatePassengerDto);
+    return this.passengersService.update(id, updatePassengerDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.passengersService.remove(+id);
+    return this.passengersService.remove(id);
   }
 }
