@@ -13,7 +13,7 @@ export class AdminsService {
   async findAll() {
    try {
      const admins = await this.adminRepository.find({
-       relations: ['country']
+       relations: ['country', 'user']
      });
 
      return {
@@ -35,7 +35,7 @@ export class AdminsService {
        where: {
          id
        },
-       relations: ['country']
+       relations: ['country', 'user']
      });
 
      if (!admin) {

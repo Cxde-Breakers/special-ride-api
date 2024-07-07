@@ -13,7 +13,7 @@ export class DriversService {
   async findAll() {
     try {
       const drivers = await this.driverRepository.find({
-        relations: ['country', 'bookings', 'category', 'subcategory']
+        relations: ['country', 'bookings', 'category', 'subcategory', 'user']
       });
 
       return {
@@ -32,7 +32,7 @@ export class DriversService {
         where: {
           id
         },
-        relations: ['country', 'bookings', 'category', 'subcategory']
+        relations: ['country', 'bookings', 'category', 'subcategory', 'user']
       });
 
       if (!driver) {

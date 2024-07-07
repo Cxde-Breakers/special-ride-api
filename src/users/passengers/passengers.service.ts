@@ -14,7 +14,7 @@ export class PassengersService {
   async findAll() {
     try {
       const passengers = await this.passengerRepository.find({
-        relations: ['bookings', 'country']
+        relations: ['bookings', 'country', 'user']
       });
 
       return {
@@ -33,7 +33,7 @@ export class PassengersService {
         where: {
           id
         },
-        relations: ['bookings', 'country']
+        relations: ['bookings', 'country', 'user']
       });
 
       if (!passenger) {
