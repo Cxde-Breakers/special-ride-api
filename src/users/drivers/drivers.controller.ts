@@ -45,14 +45,14 @@ export class DriversController {
     }
   ) {
     if (files) {
-      updateDriverDto.profilePicture = files.profilePicture ? files.profilePicture[0].buffer.toString('base64') : 'null';
-      updateDriverDto.idFront = files.idFront ? files.idFront[0].buffer.toString('base64') : 'null';
-      updateDriverDto.idBack = files.idBack ? files.idBack[0].buffer.toString('base64') : 'null';
-      updateDriverDto.vehiclePhoto = files.vehiclePhoto ? files.vehiclePhoto[0].buffer.toString('base64') : 'null';
-      updateDriverDto.vehicleRegistrationPhotoFront = files.vehicleRegistrationPhotoFront ? files.vehicleRegistrationPhotoFront[0].buffer.toString('base64') : 'null';
-      updateDriverDto.vehicleRegistrationPhotoBack = files.vehicleRegistrationPhotoBack ? files.driversLicensePhotoBack[0].buffer.toString('base64') : 'null';
-      updateDriverDto.driversLicensePhotoFront = files.driversLicensePhotoFront ? files.driversLicensePhotoFront[0].buffer.toString('base64') : 'null';
-      updateDriverDto.driversLicensePhotoBack = files.driversLicensePhotoBack ? files.driversLicensePhotoBack[0].buffer.toString('base64') : 'null';
+      updateDriverDto.profilePicture = files.profilePicture ? files.profilePicture[0].buffer.toString('base64') : null;
+      updateDriverDto.idFront = files.idFront ? files.idFront[0].buffer.toString('base64') : null;
+      updateDriverDto.idBack = files.idBack ? files.idBack[0].buffer.toString('base64') : null;
+      updateDriverDto.vehiclePhoto = files.vehiclePhoto ? files.vehiclePhoto[0].buffer.toString('base64') : null;
+      updateDriverDto.vehicleRegistrationPhotoFront = files.vehicleRegistrationPhotoFront ? files.vehicleRegistrationPhotoFront[0].buffer.toString('base64') : null;
+      updateDriverDto.vehicleRegistrationPhotoBack = files.vehicleRegistrationPhotoBack ? files.driversLicensePhotoBack[0].buffer.toString('base64') : null;
+      updateDriverDto.driversLicensePhotoFront = files.driversLicensePhotoFront ? files.driversLicensePhotoFront[0].buffer.toString('base64') : null;
+      updateDriverDto.driversLicensePhotoBack = files.driversLicensePhotoBack ? files.driversLicensePhotoBack[0].buffer.toString('base64') : null;
     }
 
     return this.driversService.update(id, updateDriverDto);

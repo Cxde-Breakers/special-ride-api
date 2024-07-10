@@ -30,9 +30,9 @@ export class PassengersController {
     }
   ) {
     if (files) {
-      updatePassengerDto.profilePicture = files.profilePicture ? files.profilePicture[0].buffer.toString('base64') : 'null';
-      updatePassengerDto.idFront = files.idFront ? files.idFront[0].buffer.toString('base64') : 'null';
-      updatePassengerDto.idBack = files.idBack ? files.idBack[0].buffer.toString('base64') : 'null';
+      updatePassengerDto.profilePicture = files.profilePicture ? files.profilePicture[0].buffer.toString('base64') : null;
+      updatePassengerDto.idFront = files.idFront ? files.idFront[0].buffer.toString('base64') : null;
+      updatePassengerDto.idBack = files.idBack ? files.idBack[0].buffer.toString('base64') : null;
     }
     return this.passengersService.update(id, updatePassengerDto);
   }

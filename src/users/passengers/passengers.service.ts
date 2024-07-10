@@ -65,7 +65,10 @@ export class PassengersService {
         ...updatePassengerDto,
         country: {
           id: updatePassengerDto.country ? updatePassengerDto.country : passenger.country.id
-        }
+        },
+        profilePicture: updatePassengerDto.profilePicture ? updatePassengerDto.profilePicture : passenger.profilePicture,
+        idFront: updatePassengerDto.idFront ? updatePassengerDto.idFront : passenger.idFront,
+        idBack: updatePassengerDto.idBack ? updatePassengerDto.idBack : passenger.idBack,
       });
 
       return {

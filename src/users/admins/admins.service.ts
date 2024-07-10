@@ -67,7 +67,8 @@ export class AdminsService {
         ...updateAdminDto,
         country: {
           id: updateAdminDto.country ? updateAdminDto.country : admin.country.id
-        }
+        },
+        profilePicture: updateAdminDto.profilePicture ? updateAdminDto.profilePicture : admin.profilePicture,
       });
 
       return {

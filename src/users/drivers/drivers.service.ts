@@ -64,8 +64,16 @@ export class DriversService {
         ...updateDriverDto,
         country: {
           id: updateDriverDto.country ? updateDriverDto.country : driver.country.id
-        }
-      })
+        },
+        profilePicture: updateDriverDto.profilePicture ? updateDriverDto.profilePicture : driver.profilePicture,
+        idFront: updateDriverDto.idFront ? updateDriverDto.idFront : driver.idFront,
+        idBack: updateDriverDto.idBack ? updateDriverDto.idBack : driver.idBack,
+        vehiclePhoto: updateDriverDto.vehiclePhoto ? updateDriverDto.vehiclePhoto : driver.vehiclePhoto,
+        vehicleRegistrationPhotoFront: updateDriverDto.vehicleRegistrationPhotoFront ? updateDriverDto.vehicleRegistrationPhotoFront : driver.vehicleRegistrationPhotoFront,
+        vehicleRegistrationPhotoBack: updateDriverDto.vehicleRegistrationPhotoBack ? updateDriverDto.vehicleRegistrationPhotoBack : driver.vehicleRegistrationPhotoBack,
+        driversLicensePhotoFront: updateDriverDto.driversLicensePhotoFront ? updateDriverDto.driversLicensePhotoFront : driver.driversLicensePhotoFront,
+        driversLicensePhotoBack: updateDriverDto.driversLicensePhotoBack ? updateDriverDto.driversLicensePhotoBack : driver.driversLicensePhotoBack,
+      });
 
       return {
         statusCode: HttpStatus.OK,
