@@ -12,6 +12,7 @@ import { TransactionsModule } from './transactions/transactions.module';
 import { BookingsModule } from './bookings/bookings.module';
 import { CountriesModule } from './countries/countries.module';
 import { SettingsModule } from './settings/settings.module';
+import { TotalsModule } from './totals/totals.module';
 
 @Module({
   imports: [
@@ -37,7 +38,8 @@ import { SettingsModule } from './settings/settings.module';
     TransactionsModule,
     BookingsModule,
     CountriesModule,
-    SettingsModule
+    SettingsModule,
+    TotalsModule
   ],
   controllers: [AppController],
   providers: [AppService],
