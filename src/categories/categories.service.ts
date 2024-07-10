@@ -40,7 +40,6 @@ export class CategoriesService {
       const conditions: FindOptionsWhere<Category> | FindOptionsWhere<Category[]> = {
         ...(name ? { name: Like(`%${name}%`) } : {}),
         ...(order ? { order } : {}),
-        ...({ status: Status.Active })
       }
 
       const categories = await this.categoryRepository.find({

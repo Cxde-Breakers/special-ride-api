@@ -44,7 +44,6 @@ export class SubcategoriesService {
         ...(name ? { name: Like(`%${name}%`) } : {}),
         ...(category ? { category: { id: category } } : {}),
         ...(order ? { order } : {}),
-        ...({ status: Status.Active }),
       }
 
       const subcategories = await this.subcategoryRepository.find({
@@ -87,6 +86,7 @@ export class SubcategoriesService {
   }
 
   async update(id: string, updateSubcategoryDto: UpdateSubcategoryDto) {
+    console.log(id)
     try {
       const subcategory = await this.subcategoryRepository.findOneBy({ id });
 
@@ -97,7 +97,7 @@ export class SubcategoriesService {
       await this.subcategoryRepository.update(subcategory.id, {
         ...updateSubcategoryDto,
         category: {
-          id: updateSubcategoryDto.category
+          id: updateSubcategoryDto.category ? updateSubcategoryDto.category : subcategory.category.id
         }
       });
 
@@ -106,6 +106,7 @@ export class SubcategoriesService {
         message: 'Subcategory updated successfully',
       }
     } catch (error) {
+      console.log(error);
       if (error instanceof NotFoundException) {
         throw new NotFoundException(error.message);
       }

@@ -10,13 +10,9 @@ import { ActiveUserData } from '../interfaces/active-user.interface';
 import { OtpAuthenticationService } from './otp-authentication.service';
 import { Response } from 'express';
 import { toFileStream } from 'qrcode';
-import { CreatePassengerDto } from 'src/users/passengers/dto/create-passenger.dto';
-import { CreateDriverDto } from 'src/users/drivers/dto/create-driver.dto';
 import { OtpDto } from './dto/otp.dto';
 import { OtpSmsAuthenticationService } from './otp-sms-authentication.service';
 import { ApiBearerAuth } from '@nestjs/swagger';
-import { CreateAdminDto } from 'src/users/admins/dto/create-admin.dto';
-import { CreateSuperadminDto } from 'src/users/superadmins/dto/create-superadmin.dto';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { Role } from 'src/users/enums/role.enum';
 
@@ -51,19 +47,21 @@ export class AuthenticationController {
             driversLicensePhotoBack?: Express.Multer.File[]
         }) {
 
-        createUserTypeDto.profilePicture = files.profilePicture ? files.profilePicture[0].buffer.toString('base64') : null;
+        if (files) {
+            createUserTypeDto.profilePicture = files.profilePicture ? files.profilePicture[0].buffer.toString('base64') : 'null';
 
-        if (signUpDto.role === Role.Passenger || signUpDto.role === Role.Driver) {
-            createUserTypeDto.idFront = files.idFront ? files.idFront[0].buffer.toString('base64') : null;
-            createUserTypeDto.idBack = files.idBack ? files.idBack[0].buffer.toString('base64') : null;
-        }
+            if (signUpDto.role === Role.Passenger || signUpDto.role === Role.Driver) {
+                createUserTypeDto.idFront = files.idFront ? files.idFront[0].buffer.toString('base64') : 'null';
+                createUserTypeDto.idBack = files.idBack ? files.idBack[0].buffer.toString('base64') : 'null';
+            }
 
-        if (signUpDto.role === Role.Driver) {
-            createUserTypeDto.vehiclePhoto = files.vehiclePhoto ? files.vehiclePhoto[0].buffer.toString('base64') : null;
-            createUserTypeDto.vehicleRegistrationPhotoFront = files.vehicleRegistrationPhotoFront ? files.vehicleRegistrationPhotoFront[0].buffer.toString('base64') : null;
-            createUserTypeDto.vehicleRegistrationPhotoBack = files.vehicleRegistrationPhotoBack ? files.driversLicensePhotoBack[0].buffer.toString('base64') : null;
-            createUserTypeDto.driversLicensePhotoFront = files.driversLicensePhotoFront ? files.driversLicensePhotoFront[0].buffer.toString('base64') : null;
-            createUserTypeDto.driversLicensePhotoBack = files.driversLicensePhotoBack ? files.driversLicensePhotoBack[0].buffer.toString('base64') : null;
+            if (signUpDto.role === Role.Driver) {
+                createUserTypeDto.vehiclePhoto = files.vehiclePhoto ? files.vehiclePhoto[0].buffer.toString('base64') : 'null';
+                createUserTypeDto.vehicleRegistrationPhotoFront = files.vehicleRegistrationPhotoFront ? files.vehicleRegistrationPhotoFront[0].buffer.toString('base64') : 'null';
+                createUserTypeDto.vehicleRegistrationPhotoBack = files.vehicleRegistrationPhotoBack ? files.driversLicensePhotoBack[0].buffer.toString('base64') : 'null';
+                createUserTypeDto.driversLicensePhotoFront = files.driversLicensePhotoFront ? files.driversLicensePhotoFront[0].buffer.toString('base64') : 'null';
+                createUserTypeDto.driversLicensePhotoBack = files.driversLicensePhotoBack ? files.driversLicensePhotoBack[0].buffer.toString('base64') : 'null';
+            }
         }
 
         return this.authenticationService.signUp(signUpDto, createUserTypeDto);

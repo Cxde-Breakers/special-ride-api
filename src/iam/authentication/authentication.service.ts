@@ -31,8 +31,6 @@ export class AuthenticationService {
         @InjectRepository(Passenger) private readonly passengerRepository: Repository<Passenger>,
         @InjectRepository(Driver) private readonly driverRepository: Repository<Driver>,
         @InjectRepository(Admin) private readonly adminRepository: Repository<Admin>,
-        @InjectRepository(Superadmin) private readonly superAdminRepository: Repository<Superadmin>,
-        @InjectRepository(Country) private readonly countryRepository: Repository<Country>,
         private readonly hashingService: HashingService,
         private readonly jwtService: JwtService,
         @Inject(jwtConfig.KEY) private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
@@ -78,17 +76,7 @@ export class AuthenticationService {
                 });
 
                 await this.adminRepository.save(admin);
-            } else if (signUpDto.role === Role.SuperAdmin) {
-                const superadmin = this.superAdminRepository.create({
-                    ...createUserTypeDto as CreateSuperadminDto,
-                    user,
-                    country: {
-                        id: createUserTypeDto.country
-                    },
-                })
-
-                await this.superAdminRepository.save(superadmin);
-            }
+            } 
 
             return this.generateTokens(user);
         } catch (error) {

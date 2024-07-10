@@ -33,7 +33,6 @@ export class CreateDriverDto {
 
     @ApiProperty()
     @IsNotEmpty()
-    @IsNumber()
     age: number;
 
     @ApiProperty({ enum: Gender })
