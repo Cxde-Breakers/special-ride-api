@@ -55,6 +55,6 @@ jobs:
           chmod 600 ssh_key
           ssh -o StrictHostKeyChecking=no -i ssh_key -p $SSH_PORT $SSH_USERNAME@$SSH_HOST << 'EOF'
             cd /home/u163133407/domains/specialride.tech/api.specialride.tech
-            yarn install --production
-            pm2 restart all || pm2 start dist/main.js --name "special-ride-api"
+            docker-compose build
+            docker-compose up -d
           EOF
