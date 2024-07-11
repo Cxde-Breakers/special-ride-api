@@ -50,11 +50,27 @@ jobs:
           SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_PORT: ${{ secrets.SSH_PORT }}  # Add your SSH port secret here
           SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
-        run: |
+         run: |
           echo "$SSH_PRIVATE_KEY" > ssh_key
           chmod 600 ssh_key
           ssh -o StrictHostKeyChecking=no -i ssh_key -p $SSH_PORT $SSH_USERNAME@$SSH_HOST << 'EOF'
+            # Install Docker
+            if ! [ -x "$(command -v docker)" ]; then
+              curl -fsSL https://get.docker.com -o get-docker.sh
+              sh get-docker.sh
+              sudo usermod -aG docker $SSH_USERNAME
+            fi
+
+            # Install Docker Compose
+            if ! [ -x "$(command -v docker-compose)" ]; then
+              sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+              sudo chmod +x /usr/local/bin/docker-compose
+            fi
+
+            # Navigate to the project directory
             cd /home/u163133407/domains/specialride.tech/api.specialride.tech
+
+            # Build and run Docker containers
             docker-compose build
             docker-compose up -d
           EOF
