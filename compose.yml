@@ -37,5 +37,8 @@ services:
       - TFA_APP_NAME=special-ride
       - TWILIO_ACCOUNT_SID=ACe2772766366c4a119c776e9af511f754
       - TWILIO_AUTH_TOKEN=32064ef3def8519b0a44f5aef72773cb
+    volumes:
+      - .:/app
+    command: yarn start:dev
 
 
