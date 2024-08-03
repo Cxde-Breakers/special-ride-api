@@ -62,7 +62,7 @@ jobs:
             echo "Cloning or pulling repository"
             cd /home/ubuntu/app
             if [ ! -d ".git" ]; then
-              git clone $REPO_URL .
+              git clone git@github.com:Cxde-Breakers/special-ride-api.git .
             else
               git pull
             fi
