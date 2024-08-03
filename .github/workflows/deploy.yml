@@ -52,7 +52,7 @@ jobs:
 
           # Copy Docker Compose files and application code to EC2
           scp -i private_key.pem -o StrictHostKeyChecking=no compose.yml $USER@$HOST:/home/ubuntu/app/
-          scp -i private_key.pem -o StrictHostKeyChecking=no -r ./app $USER@$HOST:/home/ubuntu/app/
+          scp -i private_key.pem -o StrictHostKeyChecking=no -r ./dist $USER@$HOST:/home/ubuntu/app/
           scp -i private_key.pem -o StrictHostKeyChecking=no Dockerfile $USER@$HOST:/home/ubuntu/app/
           
           # SSH into the EC2 instance to run Docker Compose commands
