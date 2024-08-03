@@ -55,7 +55,7 @@ jobs:
           ssh -i private_key.pem -o StrictHostKeyChecking=no $USER@$HOST << 'EOF'
             cd /home/ubuntu/app
             if [ ! -d ".git" ]; then
-              git clone $REPO_URL ~/app
+              git clone $REPO_URL 
             else
               git pull
             fi
