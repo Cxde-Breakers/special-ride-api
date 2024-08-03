@@ -61,6 +61,7 @@ jobs:
             set -e
             echo "Cloning or pulling repository"
             cd /home/ubuntu/app
+            echo process.env.REPO_URL
             if [ ! -d ".git" ]; then
               git clone $REPO_URL .
             else
