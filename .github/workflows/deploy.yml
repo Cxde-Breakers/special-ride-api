@@ -52,7 +52,7 @@ jobs:
           echo "Connecting to EC2 instance at $HOST as $USER"
 
           # Ensure the remote directory exists
-          ssh -i private_key.pem -o StrictHostKeyChecking=no $USER@$HOST << 'EOF'
+          ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << 'EOF'
             mkdir -p /home/ubuntu/app
           EOF
 
@@ -62,7 +62,7 @@ jobs:
             echo "Cloning or pulling repository"
             cd /home/ubuntu/app
             if [ ! -d ".git" ]; then
-              git clone ${REPO_URL} .
+              git clone $REPO_URL .
             else
               git pull
             fi
