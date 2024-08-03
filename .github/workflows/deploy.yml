@@ -51,7 +51,7 @@ jobs:
           EOF
           
           # Copy all files in the build context to the EC2 instance
-          scp -i private_key.pem -o StrictHostKeyChecking=no -r ./* $USER@$HOST:/home/ubuntu/app/
+          scp -i private_key.pem -o StrictHostKeyChecking=no -r ./dist $USER@$HOST:/home/ubuntu/app/
           
           # SSH into the EC2 instance to run Docker Compose commands
           ssh -i private_key.pem -o StrictHostKeyChecking=no $USER@$HOST << 'EOF'
