@@ -52,7 +52,7 @@ jobs:
           echo "Connecting to EC2 instance at $HOST as $USER"
 
           # Ensure the remote directory exists
-          ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << 'EOF'
+          ssh -i private_key.pem -o StrictHostKeyChecking=no $USER@$HOST << 'EOF'
             mkdir -p /home/ubuntu/app
           EOF
 
@@ -60,9 +60,10 @@ jobs:
           ssh -i private_key.pem -o StrictHostKeyChecking=no $USER@$HOST << 'EOF'
             set -e
             echo "Cloning or pulling repository"
+            ssh -T git@github.com
             cd /home/ubuntu/app
             if [ ! -d ".git" ]; then
-              git clone $REPO_URL .
+              git clone git@github.com:Cxde-Breakers/special-ride-api.git .
             else
               git pull
             fi
