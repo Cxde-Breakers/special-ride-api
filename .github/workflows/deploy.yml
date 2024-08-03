@@ -33,7 +33,7 @@ jobs:
         run: yarn build
 
       - name: Build Docker images
-        run: docker-compose build
+        run: docker compose build
 
       - name: Deploy to EC2
         env:
