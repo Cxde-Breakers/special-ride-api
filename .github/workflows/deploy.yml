@@ -44,11 +44,16 @@ jobs:
           echo "$SSH_PRIVATE_KEY" > private_key.pem
           chmod 600 private_key.pem
           
-          # Copy Docker Compose files and application code to EC2
-          scp -i private_key.pem -o StrictHostKeyChecking=no ./compose.yml $USER@$HOST:/home/ubuntu/app/
-          scp -i private_key.pem -o StrictHostKeyChecking=no -r ./app $USER@$HOST:/home/ubuntu/app/
-          scp -i private_key.pem -o StrictHostKeyChecking=no ./Dockerfile $USER@$HOST:/home/ubuntu/app/
+          # Ensure the remote directory exists
+          ssh -i private_key.pem -o StrictHostKeyChecking=no $USER@$HOST << 'EOF'
+            mkdir -p /home/ubuntu/app
+          EOF
 
+          # Copy Docker Compose files and application code to EC2
+          scp -i private_key.pem -o StrictHostKeyChecking=no docker-compose.yml $USER@$HOST:/home/ubuntu/app/
+          scp -i private_key.pem -o StrictHostKeyChecking=no -r ./app $USER@$HOST:/home/ubuntu/app/
+          scp -i private_key.pem -o StrictHostKeyChecking=no Dockerfile $USER@$HOST:/home/ubuntu/app/
+          
           # SSH into the EC2 instance to run Docker Compose commands
           ssh -i private_key.pem -o StrictHostKeyChecking=no $USER@$HOST << 'EOF'
             cd /home/ubuntu/app
