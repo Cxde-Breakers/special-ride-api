@@ -39,6 +39,6 @@ services:
       - TWILIO_AUTH_TOKEN=32064ef3def8519b0a44f5aef72773cb
     # volumes:
     #   - .:/app
-    command: yarn start:prod
+    # command: yarn start:prod
 
 
