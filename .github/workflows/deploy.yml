@@ -40,24 +40,30 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           HOST: ${{ secrets.EC2_HOST }}
           USER: ${{ secrets.EC2_USER }}
+          REPO_URL: ${{ secrets.REPO_URL }}
         run: |
           # Save SSH private key
           echo "$SSH_PRIVATE_KEY" > private_key.pem
           chmod 600 private_key.pem
-          
+
           # Ensure the remote directory exists
           ssh -i private_key.pem -o StrictHostKeyChecking=no $USER@$HOST << 'EOF'
             mkdir -p /home/ubuntu/app
           EOF
-          
-          # Copy all files in the build context to the EC2 instance
-          scp -i private_key.pem -o StrictHostKeyChecking=no -r ./dist $USER@$HOST:/home/ubuntu/app/
-          
-          # SSH into the EC2 instance to run Docker Compose commands
+
+          # SSH into the EC2 instance to clone the repository and build the application
           ssh -i private_key.pem -o StrictHostKeyChecking=no $USER@$HOST << 'EOF'
-            cd /home/ubuntu/app/dist
-            node main.js
+            cd /home/ubuntu/app
+            if [ ! -d ".git" ]; then
+              git clone $REPO_URL .
+            else
+              git pull
+            fi
+            yarn install
+            yarn build
+            docker compose build
+            docker compose up -d
           EOF
-          
+
           # Clean up
           rm private_key.pem
