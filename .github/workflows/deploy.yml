@@ -3,6 +3,7 @@ name: Fancy Deployment
 on:
   push:
     branches: [ master ]
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -12,6 +13,7 @@ jobs:
         run: docker-compose up -d --build
       - name: Build application
         run: docker-compose exec -T service yarn build
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
@@ -20,16 +22,15 @@ jobs:
       - name: Deploy application
         env:
           PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          HOSTNAME : ${{ secrets.EC2_HOST }}
-          USERNAME : ${{ secrets.EC2_USER }}
+          HOSTNAME: ${{ secrets.EC2_HOST }}
+          USERNAME: ${{ secrets.EC2_USER }}
         run: |
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-          ssh -o StrictHostKeyChecking=no -i private_key ${USERNAME}@${HOSTNAME} '
-
-          cd /home/ubuntu/app &&
-          git checkout main &&
-          git fetch --all &&
-          git reset --hard origin/main &&
-          git pull origin main &&
-          docker-compose up -d --build
-        '
+          ssh -o StrictHostKeyChecking=no -i private_key ${USERNAME}@${HOSTNAME} << 'EOF'
+            cd /home/ubuntu/app &&
+            git checkout main &&
+            git fetch --all &&
+            git reset --hard origin/main &&
+            git pull origin/main &&
+            docker-compose up -d --build
+          EOF
