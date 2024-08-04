@@ -10,9 +10,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Build docker_compose
-        run: docker-compose up -d --build
+        run: docker compose up -d --build
       - name: Build application
-        run: docker-compose exec -T service yarn build
+        run: docker compose exec -T service yarn build
 
   deploy:
     needs: build
