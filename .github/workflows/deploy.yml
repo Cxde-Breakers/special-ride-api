@@ -1,57 +1,36 @@
-name: Deploy to EC2
+name: Fancy Deployment
 
 on:
   push:
-    branches:
-      - main
+    branches: [ master ]
 
 jobs:
-  build-and-deploy:
+  # build:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - name: Build docker_compose
+  #       run: docker compose up -d --build
+  #     - name: Build application
+  #       run: docker compose exec -T service yarn build
+
+  deploy:
+    # needs: build
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '20'
-
-      - name: Cache Yarn
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/yarn
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-
-      - name: Install dependencies
-        run: yarn install
-
-      - name: Build the application
-        run: yarn build
-
-      - name: Build Docker images
-        run: docker-compose build
-
-      - name: Deploy to EC2
+      - uses: actions/checkout@v3
+      - name: Deploy application
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          HOST: ${{ secrets.EC2_HOST }}
-          USER: ${{ secrets.EC2_USER }}
+          PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          HOSTNAME: ${{ secrets.EC2_HOST }}
+          USERNAME: ${{ secrets.EC2_USER }}
         run: |
-          echo "$SSH_PRIVATE_KEY" > private_key.pem
-          chmod 600 private_key.pem
-          
-          # Copy Docker Compose files and application code to EC2
-          scp -i private_key.pem -o StrictHostKeyChecking=no ./compose.yml $USER@$HOST:/home/ubuntu/app/
-          scp -i private_key.pem -o StrictHostKeyChecking=no -r ./app $USER@$HOST:/home/ubuntu/app/
-          scp -i private_key.pem -o StrictHostKeyChecking=no ./Dockerfile $USER@$HOST:/home/ubuntu/app/
-
-          # SSH into the EC2 instance to run Docker Compose commands
-          ssh -i private_key.pem -o StrictHostKeyChecking=no $USER@$HOST << 'EOF'
-            cd /home/ubuntu/app
-            docker compose down
-            docker compose up -d --build
+          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+          ssh -o StrictHostKeyChecking=no -i private_key ${USERNAME}@${HOSTNAME} << 'EOF'
+            cd /home/ubuntu/app &&
+            git checkout main &&
+            git fetch --all &&
+            git reset --hard origin/main &&
+            git pull origin/main &&
+            docker-compose up -d --build
           EOF

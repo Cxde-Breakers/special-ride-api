@@ -1,5 +1,5 @@
 # Use the official Node.js image as a base
-FROM node:alpine
+FROM node:lts-alpine
 
 # Set the working directory
 WORKDIR /app
@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package.json yarn.lock ./
 
 # Install dependencies
-RUN yarn install --production
+RUN yarn install --production; yarn global add @nestjs/cli
 
 # Copy the rest of the application files
 COPY . .
