@@ -4,11 +4,13 @@ import { UpdatePassengerDto } from './dto/update-passenger.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Passenger } from './entities/passenger.entity';
 import { Repository } from 'typeorm';
+import { User } from '../entities/user.entity';
 
 @Injectable()
 export class PassengersService {
   constructor(
     @InjectRepository(Passenger) private readonly passengerRepository: Repository<Passenger>,
+    @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) { }
 
   async findAll() {
@@ -55,7 +57,12 @@ export class PassengersService {
 
   async update(id: string, updatePassengerDto: UpdatePassengerDto) {
     try {
-      const passenger = await this.passengerRepository.findOneBy({ id });
+      const passenger = await this.passengerRepository.findOne({ 
+        where: {
+          id
+        },
+        relations: ['country']
+       });
 
       if (!passenger) {
         throw new NotFoundException('Passenger not found');
@@ -70,6 +77,12 @@ export class PassengersService {
         idFront: updatePassengerDto.idFront ? updatePassengerDto.idFront : passenger.idFront,
         idBack: updatePassengerDto.idBack ? updatePassengerDto.idBack : passenger.idBack,
       });
+
+      if (updatePassengerDto.status) {
+        await this.userRepository.update(passenger.user.id, {
+          status: updatePassengerDto.status
+        });
+      }
 
       return {
         statusCode: HttpStatus.OK,

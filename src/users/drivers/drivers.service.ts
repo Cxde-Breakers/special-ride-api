@@ -87,13 +87,12 @@ export class DriversService {
           status: updateDriverDto.status,
         });
       }
-      
+
       return {
         statusCode: HttpStatus.OK,
         message: 'Driver updated successfully',
       }
     } catch (error) {
-      console.log(error)
       if (error instanceof NotFoundException) {
         throw new NotFoundException(error.message);
       }

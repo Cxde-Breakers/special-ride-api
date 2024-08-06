@@ -1,5 +1,6 @@
 import { Booking } from "src/bookings/entities/booking.entity";
 import { Country } from "src/countries/entities/country.entity";
+import { Status } from "src/shared/enums/status.enum";
 import { User } from "src/users/entities/user.entity";
 import { Gender } from "src/users/enums/gender.enum";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
@@ -36,6 +37,9 @@ export class Passenger {
 
     @Column({ nullable: true })
     profilePicture: string;
+
+    @Column('enum', { enum: Status, default: Status.Active })
+    status: Status;
 
     @OneToMany(() => Booking, booking => booking.passenger)
     bookings: Booking[];
