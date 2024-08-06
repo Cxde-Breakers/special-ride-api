@@ -3,11 +3,13 @@ import { UpdateDriverDto } from './dto/update-driver.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Driver } from './entities/driver.entity';
 import { Repository } from 'typeorm';
+import { User } from '../entities/user.entity';
 
 @Injectable()
 export class DriversService {
   constructor(
     @InjectRepository(Driver) private readonly driverRepository: Repository<Driver>,
+    @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) { }
 
   async findAll() {
@@ -54,7 +56,12 @@ export class DriversService {
 
   async update(id: string, updateDriverDto: UpdateDriverDto) {
     try {
-      const driver = await this.driverRepository.findOneBy({ id });
+      const driver = await this.driverRepository.findOne({
+        where: {
+          id,
+        },
+        relations: ['country', 'category', 'subcategory']
+      });
 
       if (!driver) {
         throw new NotFoundException('Driver not found');
@@ -75,11 +82,18 @@ export class DriversService {
         driversLicensePhotoBack: updateDriverDto.driversLicensePhotoBack ? updateDriverDto.driversLicensePhotoBack : driver.driversLicensePhotoBack,
       });
 
+      if (updateDriverDto.status) {
+        await this.userRepository.update(driver.user.id, {
+          status: updateDriverDto.status,
+        });
+      }
+      
       return {
         statusCode: HttpStatus.OK,
         message: 'Driver updated successfully',
       }
     } catch (error) {
+      console.log(error)
       if (error instanceof NotFoundException) {
         throw new NotFoundException(error.message);
       }

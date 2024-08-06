@@ -54,7 +54,6 @@ export class DriversController {
       updateDriverDto.driversLicensePhotoFront = files.driversLicensePhotoFront ? files.driversLicensePhotoFront[0].buffer.toString('base64') : null;
       updateDriverDto.driversLicensePhotoBack = files.driversLicensePhotoBack ? files.driversLicensePhotoBack[0].buffer.toString('base64') : null;
     }
-
     return this.driversService.update(id, updateDriverDto);
   }
 

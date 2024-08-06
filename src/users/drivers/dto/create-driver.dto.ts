@@ -47,7 +47,7 @@ export class CreateDriverDto {
     @ApiProperty()
     @IsNotEmpty()
     color: string;
-
+    
     @ApiProperty({ type: 'string', format: 'binary' })
     idFront: string;
 

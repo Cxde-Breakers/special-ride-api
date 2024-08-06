@@ -6,6 +6,7 @@ import { Gender } from "src/users/enums/gender.enum";
 import { Country } from "src/countries/entities/country.entity";
 import { Category } from "src/categories/entities/category.entity";
 import { Subcategory } from "src/subcategories/entities/subcategory.entity";
+import { Status } from "src/shared/enums/status.enum";
 
 @Entity('drivers')
 export class Driver {
@@ -78,7 +79,10 @@ export class Driver {
     @UpdateDateColumn()
     updatedAt: Date;
 
-    @OneToOne(() => User)
+    @Column('enum', { enum: Status, default: Status.Active })
+    status: Status;
+
+    @OneToOne(() => User, { eager: true })
     @JoinColumn()
     user: User;
 
