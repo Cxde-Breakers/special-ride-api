@@ -1,4 +1,4 @@
-import { BadRequestException, ConflictException, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, ConflictException, HttpStatus, Inject, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../../users/entities/user.entity';
 import { Repository } from 'typeorm';
@@ -158,23 +158,51 @@ export class AuthenticationService {
         }
     }
 
+    async resetPassword(activeUser: ActiveUserData, password: string) {
+        try {
+            const user = await this.userRepository.findOneBy({ id: activeUser.sub });
+
+            if (!user) {
+                throw new UnauthorizedException('User does not exist');
+            }
+
+            await this.userRepository.update(activeUser.sub, {
+                password: await this.hashingService.hash(password)
+            });
+
+            return {
+                statusCode: HttpStatus.OK,
+                message: 'Password reset successfully',
+            }
+        } catch (error) {
+            if (error instanceof NotFoundException) {
+                throw new UnauthorizedException(error.message);
+            }
+            throw new BadRequestException(error.message);
+        }
+    }
+
     async createSuperAdmin(email: string, password: string, name: string) {
-        const user = this.userRepository.create({
-            email,
-            password: await this.hashingService.hash(password),
-            role: Role.SuperAdmin,
-        });
+        try {
+            const user = this.userRepository.create({
+                email,
+                password: await this.hashingService.hash(password),
+                role: Role.SuperAdmin,
+            });
 
-        await this.userRepository.save(user);
+            await this.userRepository.save(user);
 
-        const superadmin = this.superAdminRepository.create({
-            name,
-            user
-        });
+            const superadmin = this.superAdminRepository.create({
+                name,
+                user
+            });
 
-        await this.superAdminRepository.save(superadmin);
+            await this.superAdminRepository.save(superadmin);
 
-        return 'Superadmin created successfully';
+            return 'Superadmin created successfully';
+        } catch (error) {
+            return error.message;
+        }
     }
 
     private async signToken<T>(userId: string, expiresIn: number, payload?: T) {

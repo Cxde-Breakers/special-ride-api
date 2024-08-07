@@ -107,4 +107,11 @@ export class AuthenticationController {
     async verifyOtp(@Body() otpDto: OtpDto) {
         return this.otpSmsAuthenticationService.verifyCode(otpDto);
     }
+
+    @Auth(AuthType.Bearer)
+    @HttpCode(HttpStatus.OK)
+    @Post('reset-password')
+    resetPassword(@ActiveUser() activeUser: ActiveUserData, @Body('password') password: string) {
+        return this.authenticationService.resetPassword(activeUser, password);
+    }
 }
