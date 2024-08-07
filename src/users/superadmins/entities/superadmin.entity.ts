@@ -10,9 +10,6 @@ export class Superadmin {
     @Column()
     name: string;
 
-    // @Column()
-    // phoneNumber: string;
-
     @Column('enum', { enum: Status, default: Status.Active })
     status: Status;
 

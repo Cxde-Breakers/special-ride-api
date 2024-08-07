@@ -1,26 +1,74 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateSuperadminDto } from './dto/create-superadmin.dto';
 import { UpdateSuperadminDto } from './dto/update-superadmin.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Superadmin } from './entities/superadmin.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class SuperadminsService {
-  create(createSuperadminDto: CreateSuperadminDto) {
-    return 'This action adds a new superadmin';
+  constructor(
+    @InjectRepository(Superadmin) private readonly superAdminRepository: Repository<Superadmin>,
+  ) { }
+  
+  async findAll() {
+    try {
+      const superadmins = await this.superAdminRepository.find();
+
+      return {
+        statusCode: HttpStatus.OK,
+        message: "Superadmin retrieved successfully",
+        data: superadmins,
+      }
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
   }
 
-  findAll() {
-    return `This action returns all superadmins`;
+  async findOne(id: string) {
+    try {
+      const superadmin = await this.superAdminRepository.findOneBy({ id });
+
+      if (!superadmin) {
+        throw new NotFoundException('Superadmin not found');
+      }
+
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'Superadmin retrieved successfully',
+        data: superadmin,
+      }
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw new NotFoundException(error.message);
+      }
+      throw new BadRequestException(error.message);
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} superadmin`;
-  }
+  async update(id: string, updateSuperadminDto: UpdateSuperadminDto) {
+    try {
+      const superadmin = await this.superAdminRepository.findOneBy({ id });
 
-  update(id: number, updateSuperadminDto: UpdateSuperadminDto) {
-    return `This action updates a #${id} superadmin`;
-  }
+      if (!superadmin) {
+        throw new NotFoundException('Superadmin not found');
+      }
 
-  remove(id: number) {
-    return `This action removes a #${id} superadmin`;
+      await this.superAdminRepository.update(id, {
+        ...updateSuperadminDto,
+        profilePicture: updateSuperadminDto.profilePicture ? updateSuperadminDto.profilePicture : superadmin.profilePicture,
+      });
+
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'Superadmin updated successfully',
+        data: superadmin,
+      }
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw new NotFoundException(error.message);
+      }
+      throw new BadRequestException(error.message);
+    }
   }
 }

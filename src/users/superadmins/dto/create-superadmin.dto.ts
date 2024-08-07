@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsPhoneNumber } from "class-validator";
+import { IsNotEmpty,  } from "class-validator";
 
 export class CreateSuperadminDto {
     @ApiProperty()
@@ -8,9 +8,4 @@ export class CreateSuperadminDto {
 
     @ApiProperty({ type: 'string', format: 'binary' })
     profilePicture: string;
-    
-    // @ApiProperty()
-    // @IsPhoneNumber()
-    // @IsNotEmpty()
-    // phoneNumber: string;
 }

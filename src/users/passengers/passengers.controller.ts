@@ -2,9 +2,10 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UploadedFiles } from
 import { PassengersService } from './passengers.service';
 import { CreatePassengerDto } from './dto/create-passenger.dto';
 import { UpdatePassengerDto } from './dto/update-passenger.dto';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiBearerAuth()
+@ApiTags('passengers')
 @Controller('passengers')
 export class PassengersController {
   constructor(private readonly passengersService: PassengersService) { }
