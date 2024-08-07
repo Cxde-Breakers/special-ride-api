@@ -20,19 +20,19 @@ export class Passenger {
     @Column({ unique: true })
     phoneNumber: string;
 
-    @Column()
+    @Column({ nullable: true })
     age: number;
 
-    @Column('enum', { enum: Gender })
+    @Column('enum', { enum: Gender, nullable: true })
     gender: Gender;
 
-    @Column()
+    @Column({ nullable: true })
     idFront: string;
 
-    @Column()
+    @Column({ nullable: true })
     idBack: string;
 
-    @Column()
+    @Column({ nullable: true })
     address: string;
 
     @Column({ nullable: true })

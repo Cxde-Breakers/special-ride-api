@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsEnum, IsNotEmpty, IsPhoneNumber } from "class-validator";
+import { IsEnum, IsNotEmpty, IsOptional, IsPhoneNumber } from "class-validator";
 import { Gender } from "src/users/enums/gender.enum";
 
 
@@ -13,7 +13,8 @@ export class CreatePassengerDto {
     lastName: string;
 
     @ApiProperty()
-    @IsNotEmpty()
+    // @IsNotEmpty()
+    @IsOptional()
     country: string;
 
     @ApiProperty()
@@ -22,20 +23,25 @@ export class CreatePassengerDto {
     phoneNumber: string;
 
     @ApiProperty()
-    @IsNotEmpty()
+    // @IsNotEmpty()
+    @IsOptional()
     age: number;
 
     @ApiProperty({ type: 'string', format: 'binary' })
+    @IsOptional()
     idFront: string;
 
     @ApiProperty({ type: 'string', format: 'binary' })
+    @IsOptional()
     idBack: string;
 
     @ApiProperty({ enum: Gender })
-    @IsNotEmpty()
+    // @IsNotEmpty()
+    @IsOptional()
     @IsEnum(Gender)
     gender: Gender;
 
     @ApiProperty({ type: 'string', format: 'binary' })
+    @IsOptional()
     profilePicture: string;
 }
