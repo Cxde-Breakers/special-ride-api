@@ -2,13 +2,14 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestj
 import { SubcategoriesService } from './subcategories.service';
 import { CreateSubcategoryDto } from './dto/create-subcategory.dto';
 import { UpdateSubcategoryDto } from './dto/update-subcategory.dto';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { SubCategoryQueryDto } from './dto/subcategory-query.dto';
 import { Roles } from 'src/iam/authorization/decorators/roles.decorator';
 import { PaginationQueryDto } from 'src/shared/dto/pagination-query.dto';
 import { Role } from 'src/users/enums/role.enum';
 
 @ApiBearerAuth()
+@ApiTags('subcategories')
 @Controller('subcategories')
 export class SubcategoriesController {
   constructor(private readonly subcategoriesService: SubcategoriesService) { }

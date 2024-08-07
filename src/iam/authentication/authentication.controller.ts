@@ -12,10 +12,11 @@ import { Response } from 'express';
 import { toFileStream } from 'qrcode';
 import { OtpDto } from './dto/otp.dto';
 import { OtpSmsAuthenticationService } from './otp-sms-authentication.service';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { Role } from '../../users/enums/role.enum';
 
+@ApiTags('auth')
 @Auth(AuthType.None)
 @Controller('auth')
 export class AuthenticationController {
@@ -109,6 +110,7 @@ export class AuthenticationController {
     }
 
     @Auth(AuthType.Bearer)
+    @ApiBearerAuth()
     @HttpCode(HttpStatus.OK)
     @Post('reset-password')
     resetPassword(@ActiveUser() activeUser: ActiveUserData, @Body('password') password: string) {
