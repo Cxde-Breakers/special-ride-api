@@ -10,4 +10,4 @@ import { Subcategory } from 'src/subcategories/entities/subcategory.entity';
   controllers: [CategoriesController],
   providers: [CategoriesService],
 })
-export class CategoriesModule {}
+export class CategoriesModule { }

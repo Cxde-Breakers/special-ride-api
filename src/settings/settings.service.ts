@@ -3,8 +3,8 @@ import { CreateSettingDto } from './dto/create-setting.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Setting } from './entities/setting.entity';
 import { Repository } from 'typeorm';
-import { Role } from 'src/users/enums/role.enum';
 import { Roles } from 'src/iam/authorization/decorators/roles.decorator';
+import { Role } from 'src/users/enums/role.enum';
 
 @Roles(Role.SuperAdmin)
 @Injectable()
@@ -20,20 +20,20 @@ export class SettingsService {
         where: {}
       })
 
-     if (setting) {
-       await this.settingRepository.save(Object.assign(setting, {
-         ...createSettingDto,
-         siteLogo: createSettingDto.siteLogo ? createSettingDto.siteLogo : setting.siteLogo,
-         seoImage: createSettingDto.seoImage ? createSettingDto.seoImage : setting.seoImage,
-         favicon: createSettingDto.favicon ? createSettingDto.favicon : setting.favicon,
-       }));
-     } else {
-       setting = this.settingRepository.create({
-         ...createSettingDto,
-       });
+      if (setting) {
+        await this.settingRepository.save(Object.assign(setting, {
+          ...createSettingDto,
+          siteLogo: createSettingDto.siteLogo ? createSettingDto.siteLogo : setting.siteLogo,
+          seoImage: createSettingDto.seoImage ? createSettingDto.seoImage : setting.seoImage,
+          favicon: createSettingDto.favicon ? createSettingDto.favicon : setting.favicon,
+        }));
+      } else {
+        setting = this.settingRepository.create({
+          ...createSettingDto,
+        });
 
-       await this.settingRepository.save(setting);
-     }
+        await this.settingRepository.save(setting);
+      }
 
       return {
         statusCode: HttpStatus.CREATED,

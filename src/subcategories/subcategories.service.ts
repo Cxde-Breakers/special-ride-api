@@ -6,7 +6,6 @@ import { Subcategory } from './entities/subcategory.entity';
 import { FindOptionsWhere, Like, Repository } from 'typeorm';
 import { SubCategoryQueryDto } from './dto/subcategory-query.dto';
 import { PaginationQueryDto } from 'src/shared/dto/pagination-query.dto';
-import { Status } from 'src/shared/enums/status.enum';
 
 @Injectable()
 export class SubcategoriesService {

@@ -1,6 +1,6 @@
 import { BadRequestException, ConflictException, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/users/entities/user.entity';
+import { User } from '../../users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { HashingService } from '../hashing/hashing.service';
 import { SignUpDto } from './dto/sign-up.dto';
@@ -12,18 +12,15 @@ import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { RefreshTokenIdsStorage } from './refresh-token-ids.storage';
 import { randomUUID } from 'crypto';
 import { InvalidatedRefreshTokenError } from './errors/invalidated-refresh-token-error';
-import { Passenger } from 'src/users/passengers/entities/passenger.entity';
-import { Driver } from 'src/users/drivers/entities/driver.entity';
-import { CreatePassengerDto } from 'src/users/passengers/dto/create-passenger.dto';
-import { CreateDriverDto } from 'src/users/drivers/dto/create-driver.dto';
-import { Role } from 'src/users/enums/role.enum';
+import { Passenger } from '../../users/passengers/entities/passenger.entity';
+import { Driver } from '../../users/drivers/entities/driver.entity';
+import { CreatePassengerDto } from '../../users/passengers/dto/create-passenger.dto';
+import { CreateDriverDto } from '../../users/drivers/dto/create-driver.dto';
+import { Role } from '../../users/enums/role.enum';
 import { SignInDto } from './dto/sign-in.dto';
-import { Superadmin } from 'src/users/superadmins/entities/superadmin.entity';
-import { CreateAdminDto } from 'src/users/admins/dto/create-admin.dto';
-import { Admin } from 'src/users/admins/entities/admin.entity';
-import { CreateSuperadminDto } from 'src/users/superadmins/dto/create-superadmin.dto';
-import { Country } from 'src/countries/entities/country.entity';
-
+import { Superadmin } from '../../users/superadmins/entities/superadmin.entity';
+import { CreateAdminDto } from '../../users/admins/dto/create-admin.dto';
+import { Admin } from '../../users/admins/entities/admin.entity';
 @Injectable()
 export class AuthenticationService {
     constructor(
@@ -31,13 +28,14 @@ export class AuthenticationService {
         @InjectRepository(Passenger) private readonly passengerRepository: Repository<Passenger>,
         @InjectRepository(Driver) private readonly driverRepository: Repository<Driver>,
         @InjectRepository(Admin) private readonly adminRepository: Repository<Admin>,
+        @InjectRepository(Superadmin) private readonly superAdminRepository: Repository<Superadmin>,
         private readonly hashingService: HashingService,
         private readonly jwtService: JwtService,
         @Inject(jwtConfig.KEY) private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
         private readonly refreshTokenIdsStorage: RefreshTokenIdsStorage,
     ) { }
 
-    async signUp(signUpDto: SignUpDto, createUserTypeDto: CreatePassengerDto | CreateDriverDto | CreateAdminDto | CreateSuperadminDto) {
+    async signUp(signUpDto: SignUpDto, createUserTypeDto: CreatePassengerDto | CreateDriverDto | CreateAdminDto) {
         try {
             const user = this.userRepository.create({
                 ...signUpDto,
@@ -76,7 +74,9 @@ export class AuthenticationService {
                 });
 
                 await this.adminRepository.save(admin);
-            } 
+            } else if (signUpDto.role === Role.SuperAdmin) {
+                throw new UnauthorizedException();
+            }
 
             return this.generateTokens(user);
         } catch (error) {
@@ -156,6 +156,25 @@ export class AuthenticationService {
             }
             throw new UnauthorizedException(error.message);
         }
+    }
+
+    async createSuperAdmin(email: string, password: string, name: string) {
+        const user = this.userRepository.create({
+            email,
+            password: await this.hashingService.hash(password),
+            role: Role.SuperAdmin,
+        });
+
+        await this.userRepository.save(user);
+
+        const superadmin = this.superAdminRepository.create({
+            name,
+            user
+        });
+
+        await this.superAdminRepository.save(superadmin);
+
+        return 'Superadmin created successfully';
     }
 
     private async signToken<T>(userId: string, expiresIn: number, payload?: T) {

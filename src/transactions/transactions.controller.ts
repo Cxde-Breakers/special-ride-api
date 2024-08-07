@@ -4,16 +4,17 @@ import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { Roles } from 'src/iam/authorization/decorators/roles.decorator';
-import { Role } from 'src/users/enums/role.enum';
-import { TransactionQueryDto } from './dto/transaction-query.dto';
-import { PaginationQueryDto } from 'src/shared/dto/pagination-query.dto';
 import { ActiveUser } from 'src/iam/decorators/active-user.decorator';
 import { ActiveUserData } from 'src/iam/interfaces/active-user.interface';
+import { PaginationQueryDto } from 'src/shared/dto/pagination-query.dto';
+import { Role } from 'src/users/enums/role.enum';
+import { TransactionQueryDto } from './dto/transaction-query.dto';
+
 
 @ApiBearerAuth()
 @Controller('transactions')
 export class TransactionsController {
-  constructor(private readonly transactionsService: TransactionsService) {}
+  constructor(private readonly transactionsService: TransactionsService) { }
 
   @Post()
   create(@Body() createTransactionDto: CreateTransactionDto) {

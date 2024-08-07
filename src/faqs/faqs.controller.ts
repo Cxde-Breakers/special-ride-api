@@ -9,7 +9,7 @@ import { Role } from 'src/users/enums/role.enum';
 @ApiBearerAuth()
 @Controller('faqs')
 export class FaqsController {
-  constructor(private readonly faqsService: FaqsService) {}
+  constructor(private readonly faqsService: FaqsService) { }
 
   @Roles(Role.SuperAdmin)
   @Post()

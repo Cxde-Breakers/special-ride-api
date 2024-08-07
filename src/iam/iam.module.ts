@@ -14,14 +14,14 @@ import { AuthenticationGuard } from './authentication/guards/authentication.guar
 import { RefreshTokenIdsStorage } from './authentication/refresh-token-ids.storage';
 import { RolesGuard } from './authorization/guards/roles.guard';
 import { OtpAuthenticationService } from './authentication/otp-authentication.service';
-import { Passenger } from 'src/users/passengers/entities/passenger.entity';
-import { Driver } from 'src/users/drivers/entities/driver.entity';
-import { Transaction } from 'src/transactions/entities/transaction.entity';
 import { Booking } from 'src/bookings/entities/booking.entity';
+import { Country } from 'src/countries/entities/country.entity';
+import { Driver } from 'src/users/drivers/entities/driver.entity';
+import { Passenger } from 'src/users/passengers/entities/passenger.entity';
+import { Superadmin } from 'src/users/superadmins/entities/superadmin.entity';
 import { OtpSmsAuthenticationService } from './authentication/otp-sms-authentication.service';
 import { Admin } from 'src/users/admins/entities/admin.entity';
-import { Superadmin } from 'src/users/superadmins/entities/superadmin.entity';
-import { Country } from 'src/countries/entities/country.entity';
+import { Transaction } from 'src/transactions/entities/transaction.entity';
 
 @Module({
   imports: [
@@ -31,8 +31,8 @@ import { Country } from 'src/countries/entities/country.entity';
   ],
   providers: [
     {
-    provide: HashingService,
-    useClass: BcryptService,
+      provide: HashingService,
+      useClass: BcryptService,
     },
     {
       provide: APP_GUARD,

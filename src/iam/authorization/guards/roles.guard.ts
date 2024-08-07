@@ -1,15 +1,15 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
+import { REQUEST_USER_KEY } from 'src/iam/iam.constants';
+import { ActiveUserData } from 'src/iam/interfaces/active-user.interface';
 import { Role } from 'src/users/enums/role.enum';
 import { ROLES_KEY } from '../decorators/roles.decorator';
-import { ActiveUserData } from 'src/iam/interfaces/active-user.interface';
-import { REQUEST_USER_KEY } from 'src/iam/iam.constants';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
   constructor(private readonly reflector: Reflector) { }
-  
+
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {

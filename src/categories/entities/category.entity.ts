@@ -1,6 +1,6 @@
-import { Status } from "src/shared/enums/status.enum";
-import { Subcategory } from "src/subcategories/entities/subcategory.entity";
-import { Driver } from "src/users/drivers/entities/driver.entity";
+import { Status } from "../../shared/enums/status.enum";
+import { Subcategory } from "../../subcategories/entities/subcategory.entity";
+import { Driver } from "../../users/drivers/entities/driver.entity";
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
 
 @Entity('categories')

@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package.json yarn.lock ./
 
 # Install dependencies
-RUN yarn install --production; yarn global add @nestjs/cli
+RUN yarn install --network-timeout 10000000
 
 # Copy the rest of the application files
 COPY . .

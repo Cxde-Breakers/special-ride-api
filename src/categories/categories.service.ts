@@ -4,10 +4,9 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Category } from './entities/category.entity';
 import { FindOptionsWhere, Like, Repository } from 'typeorm';
-import { Status } from 'src/shared/enums/status.enum';
-import { CategoryQueryDto } from './dto/category-query.dto';
-import { PaginationQueryDto } from 'src/shared/dto/pagination-query.dto';
 import { ApiConsumes } from '@nestjs/swagger';
+import { PaginationQueryDto } from 'src/shared/dto/pagination-query.dto';
+import { CategoryQueryDto } from './dto/category-query.dto';
 
 @Injectable()
 export class CategoriesService {

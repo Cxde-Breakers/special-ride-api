@@ -1,7 +1,7 @@
-import { PaymentStatus } from "src/shared/enums/payment-status.enum";
-import { Status } from "src/shared/enums/status.enum";
-import { Driver } from "src/users/drivers/entities/driver.entity";
-import { Passenger } from "src/users/passengers/entities/passenger.entity";
+import { PaymentStatus } from "../../shared/enums/payment-status.enum";
+import { Status } from "../../shared/enums/status.enum";
+import { Driver } from "../../users/drivers/entities/driver.entity";
+import { Passenger } from "../../users/passengers/entities/passenger.entity";
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity('bookings')
@@ -18,7 +18,7 @@ export class Booking {
     @Column('decimal', { precision: 10, scale: 2 })
     distance: number;
 
-    @Column('decimal', { precision: 10, scale: 2})
+    @Column('decimal', { precision: 10, scale: 2 })
     suggestedFare: number;
 
     @Column('decimal', { precision: 10, scale: 2 })
@@ -27,7 +27,7 @@ export class Booking {
     @Column()
     country: string;
 
-    @Column('enum', {enum: PaymentStatus, default: PaymentStatus.Unpaid})
+    @Column('enum', { enum: PaymentStatus, default: PaymentStatus.Unpaid })
     paymentStatus: string;
 
     @Column('enum', { enum: Status, default: Status.Active })
@@ -35,7 +35,7 @@ export class Booking {
 
     @CreateDateColumn()
     createdAt: Date;
-    
+
     @UpdateDateColumn()
     updatedAt: Date;
 

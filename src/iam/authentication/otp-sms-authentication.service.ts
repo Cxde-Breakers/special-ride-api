@@ -5,7 +5,7 @@ import { Twilio } from 'twilio';
 import { OtpDto } from './dto/otp.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Driver } from 'src/users/drivers/entities/driver.entity';
+import { Driver } from '../../users/drivers/entities/driver.entity';
 import { AuthenticationService } from './authentication.service';
 
 @Injectable()
@@ -48,27 +48,27 @@ export class OtpSmsAuthenticationService {
     }
 
     async verifyCode(otpDto: OtpDto) {
-       try {
-           const passenger = await this.passengerRepository.findOneBy({ phoneNumber: otpDto.phoneNumber });
-           const driver = await this.driverRepository.findOneBy({ phoneNumber: otpDto.phoneNumber });
+        try {
+            const passenger = await this.passengerRepository.findOneBy({ phoneNumber: otpDto.phoneNumber });
+            const driver = await this.driverRepository.findOneBy({ phoneNumber: otpDto.phoneNumber });
 
-           if (!passenger && !driver) {
-               throw new BadRequestException('No user found with this phone number');
-           }
+            if (!passenger && !driver) {
+                throw new BadRequestException('No user found with this phone number');
+            }
 
-           const serviceSid = this.configService.getOrThrow('TWILIO_SERVICE_SID');
-           const verificationCheck = await this.twilioClient.verify.v2.services(serviceSid)
-               .verificationChecks
-               .create({
-                   to: otpDto.phoneNumber,
-                   code: otpDto.code,
-               });
+            const serviceSid = this.configService.getOrThrow('TWILIO_SERVICE_SID');
+            const verificationCheck = await this.twilioClient.verify.v2.services(serviceSid)
+                .verificationChecks
+                .create({
+                    to: otpDto.phoneNumber,
+                    code: otpDto.code,
+                });
 
-           if (verificationCheck.status !== 'approved') {
-                   throw new BadRequestException('Invalid verification code');
-           }
-       } catch (error) {
+            if (verificationCheck.status !== 'approved') {
+                throw new BadRequestException('Invalid verification code');
+            }
+        } catch (error) {
             throw new BadRequestException(error.message);
-       }
+        }
     }
 }

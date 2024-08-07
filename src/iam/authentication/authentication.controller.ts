@@ -14,7 +14,7 @@ import { OtpDto } from './dto/otp.dto';
 import { OtpSmsAuthenticationService } from './otp-sms-authentication.service';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
-import { Role } from 'src/users/enums/role.enum';
+import { Role } from '../../users/enums/role.enum';
 
 @Auth(AuthType.None)
 @Controller('auth')

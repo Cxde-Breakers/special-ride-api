@@ -2,7 +2,6 @@ import { CanActivate, ExecutionContext, Inject, Injectable, UnauthorizedExceptio
 import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
-import { Observable } from 'rxjs';
 import jwtConfig from 'src/iam/config/jwt.config';
 import { REQUEST_USER_KEY } from 'src/iam/iam.constants';
 
@@ -11,7 +10,7 @@ export class AccessTokenGuard implements CanActivate {
   constructor(private readonly jwtService: JwtService,
     @Inject(jwtConfig.KEY) private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
   ) { }
-  
+
   async canActivate(
     context: ExecutionContext,
   ): Promise<boolean> {

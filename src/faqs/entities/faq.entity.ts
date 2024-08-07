@@ -1,4 +1,4 @@
-import { Status } from "src/shared/enums/status.enum";
+import { Status } from "../../shared/enums/status.enum";
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
 
 @Entity('faqs')
@@ -12,10 +12,10 @@ export class Faq {
     @Column()
     answer: string;
 
-    @Column({unique: true})
+    @Column({ unique: true })
     order: number;
 
-    @Column('enum', {enum: Status, default: Status.Active})
+    @Column('enum', { enum: Status, default: Status.Active })
     status: Status;
 
     @CreateDateColumn()

@@ -15,7 +15,7 @@ export class TotalsService {
         @InjectRepository(Transaction) private readonly transactionRepository: Repository<Transaction>,
         @InjectRepository(Country) private readonly countryRepository: Repository<Country>,
     ) { }
-    
+
     async totals() {
         try {
             const users = await this.userRepository.count({

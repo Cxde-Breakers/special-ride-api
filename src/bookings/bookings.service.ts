@@ -4,10 +4,10 @@ import { UpdateBookingDto } from './dto/update-booking.dto';
 import { Booking } from './entities/booking.entity';
 import { Between, FindOptionsWhere, Like, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Status } from 'src/shared/enums/status.enum';
 import { BookingQueryDto } from './dto/booking-query.dto';
 import { PaginationQueryDto } from 'src/shared/dto/pagination-query.dto';
 import { ActiveUserData } from 'src/iam/interfaces/active-user.interface';
+import { Status } from 'src/shared/enums/status.enum';
 import { Role } from 'src/users/enums/role.enum';
 
 @Injectable()
@@ -15,7 +15,7 @@ export class BookingsService {
   constructor(
     @InjectRepository(Booking)
     private bookingRepository: Repository<Booking>,
-  ) {}
+  ) { }
 
   async create(createBookingDto: CreateBookingDto) {
     try {
@@ -49,7 +49,7 @@ export class BookingsService {
         ...(country ? { country: Like('%${country}%') } : {}),
         ...(activeUser.role === Role.Driver ? { driver: { id: activeUser.sub } } : {}),
         ...(activeUser.role === Role.Passenger ? { passenger: { id: activeUser.sub } } : {}),
-        ...({status: Status.Active}),
+        ...({ status: Status.Active }),
       }
 
       const bookings = await this.bookingRepository.find({
@@ -69,30 +69,30 @@ export class BookingsService {
   }
 
   async findOne(id: string) {
-   try {
-     const booking = await this.bookingRepository.findOneBy({ id });
+    try {
+      const booking = await this.bookingRepository.findOneBy({ id });
 
-     if (!booking) {
-       throw new NotFoundException(`Booking not found`);
-     }
+      if (!booking) {
+        throw new NotFoundException(`Booking not found`);
+      }
 
-     return {
+      return {
         statusCode: HttpStatus.OK,
         message: 'Booking retrieved successfully',
         data: booking
-     }
-   } catch (error) {
+      }
+    } catch (error) {
       if (error instanceof NotFoundException) {
         throw new NotFoundException(error.message);
       }
       throw new BadRequestException(error.message);
-   }
+    }
   }
 
   async update(id: string, updateBookingDto: UpdateBookingDto) {
     try {
       const booking = await this.bookingRepository.findOneBy({ id });
-      
+
       if (!booking) {
         throw new NotFoundException('Booking not found');
       }

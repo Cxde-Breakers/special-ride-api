@@ -9,12 +9,8 @@ export class CreateSuperadminDto {
     @ApiProperty({ type: 'string', format: 'binary' })
     profilePicture: string;
     
-    @ApiProperty()
-    @IsPhoneNumber()
-    @IsNotEmpty()
-    phoneNumber: string;
-
-    @ApiProperty()
-    @IsNotEmpty()
-    country: string;
+    // @ApiProperty()
+    // @IsPhoneNumber()
+    // @IsNotEmpty()
+    // phoneNumber: string;
 }

@@ -2,13 +2,14 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestj
 import { BookingsService } from './bookings.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { UpdateBookingDto } from './dto/update-booking.dto';
-import { ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { Roles } from 'src/iam/authorization/decorators/roles.decorator';
-import { Role } from 'src/users/enums/role.enum';
-import { PaginationQueryDto } from 'src/shared/dto/pagination-query.dto';
-import { BookingQueryDto } from './dto/booking-query.dto';
 import { ActiveUser } from 'src/iam/decorators/active-user.decorator';
 import { ActiveUserData } from 'src/iam/interfaces/active-user.interface';
+import { PaginationQueryDto } from 'src/shared/dto/pagination-query.dto';
+import { Role } from 'src/users/enums/role.enum';
+import { BookingQueryDto } from './dto/booking-query.dto';
+
 
 @ApiBearerAuth()
 @Controller('bookings')

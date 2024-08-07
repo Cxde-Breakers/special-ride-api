@@ -3,16 +3,16 @@ import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { Roles } from 'src/iam/authorization/decorators/roles.decorator';
+import { PaginationQueryDto } from 'src/shared/dto/pagination-query.dto';
 import { Role } from 'src/users/enums/role.enum';
 import { CategoryQueryDto } from './dto/category-query.dto';
-import { PaginationQueryDto } from 'src/shared/dto/pagination-query.dto';
-import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiBearerAuth()
 @Controller('categories')
 export class CategoriesController {
-  constructor(private readonly categoriesService: CategoriesService) {}
+  constructor(private readonly categoriesService: CategoriesService) { }
 
   @Roles(Role.SuperAdmin)
   @Post()

@@ -4,11 +4,11 @@ import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Transaction } from './entities/transaction.entity';
 import { Between, FindOptionsWhere, Like, Repository } from 'typeorm';
-import { Status } from 'src/shared/enums/status.enum';
 import { ActiveUserData } from 'src/iam/interfaces/active-user.interface';
 import { PaginationQueryDto } from 'src/shared/dto/pagination-query.dto';
-import { TransactionQueryDto } from './dto/transaction-query.dto';
+import { Status } from 'src/shared/enums/status.enum';
 import { Role } from 'src/users/enums/role.enum';
+import { TransactionQueryDto } from './dto/transaction-query.dto';
 
 @Injectable()
 export class TransactionsService {
@@ -99,10 +99,10 @@ export class TransactionsService {
 
       await this.transactionRepository.update(
         transaction.id, {
-          ...updateTransactionDto,
-          paymentBy: {
-            id: updateTransactionDto.paymentBy
-          }
+        ...updateTransactionDto,
+        paymentBy: {
+          id: updateTransactionDto.paymentBy
+        }
       });
 
       return {
@@ -118,21 +118,21 @@ export class TransactionsService {
   }
 
   async remove(id: string) {
-   try {
-     const transaction = await this.transactionRepository.findOneBy({ id });
-     
+    try {
+      const transaction = await this.transactionRepository.findOneBy({ id });
+
       if (!transaction) {
         throw new NotFoundException('Transaction not found');
-     }
-     
-     await this.transactionRepository.update(transaction.id, {
+      }
+
+      await this.transactionRepository.update(transaction.id, {
         status: Status.Inactive
       });
-   } catch (error) {
-    if (error instanceof NotFoundException) {
-      throw new NotFoundException(error.message);
-     }
-     throw new BadRequestException(error.message);
-   }
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw new NotFoundException(error.message);
+      }
+      throw new BadRequestException(error.message);
+    }
   }
 }

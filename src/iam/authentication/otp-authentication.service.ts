@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { authenticator } from 'otplib';
-import { User } from 'src/users/entities/user.entity';
+import { User } from '../../users/entities/user.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -11,7 +11,7 @@ export class OtpAuthenticationService {
         private readonly configService: ConfigService,
         @InjectRepository(User) private readonly userRepository: Repository<User>,
     ) { }
-    
+
     async generateSecret(email: string) {
         const secret = authenticator.generateSecret();
         const appName = this.configService.getOrThrow('TFA_APP_NAME');
@@ -30,9 +30,9 @@ export class OtpAuthenticationService {
     }
 
     async enableTfaForUser(email: string, secret: string) {
-        const {id} = await this.userRepository.findOneOrFail({
+        const { id } = await this.userRepository.findOneOrFail({
             where: { email },
-            select: {id: true},
+            select: { id: true },
         });
         await this.userRepository.update(
             { id },

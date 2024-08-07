@@ -1,4 +1,4 @@
-import { User } from "src/users/entities/user.entity";
+import { User } from "../../users/entities/user.entity";
 import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
 import { TransactionStatus } from '../../shared/enums/transaction-status.enum';
 import { Status } from '../../shared/enums/status.enum';
@@ -20,7 +20,7 @@ export class Transaction {
     @Column('enum', { enum: TransactionStatus, default: TransactionStatus.Pending })
     TransactionStatus: TransactionStatus;
 
-    @Column('enum', {enum: Status, default: Status.Active})
+    @Column('enum', { enum: Status, default: Status.Active })
     status: Status;
 
     @CreateDateColumn()

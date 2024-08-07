@@ -2,11 +2,12 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { User } from '../../entities/user.entity';
 import { Booking } from "src/bookings/entities/booking.entity";
-import { Gender } from "src/users/enums/gender.enum";
-import { Country } from "src/countries/entities/country.entity";
 import { Category } from "src/categories/entities/category.entity";
-import { Subcategory } from "src/subcategories/entities/subcategory.entity";
+import { Country } from "src/countries/entities/country.entity";
 import { Status } from "src/shared/enums/status.enum";
+import { Subcategory } from "src/subcategories/entities/subcategory.entity";
+import { Gender } from "src/users/enums/gender.enum";
+
 
 @Entity('drivers')
 export class Driver {

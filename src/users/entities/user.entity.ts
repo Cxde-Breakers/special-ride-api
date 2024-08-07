@@ -1,7 +1,7 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Role } from "../enums/role.enum";
-import { Transaction } from "src/transactions/entities/transaction.entity";
-import { Status } from "src/shared/enums/status.enum";
+import { Transaction } from "../../transactions/entities/transaction.entity";
+import { Status } from "../../shared/enums/status.enum";
 
 @Entity('users')
 export class User {
@@ -16,7 +16,7 @@ export class User {
 
     @Column({ enum: Role, default: Role.Passenger })
     role: Role;
-    
+
     @Column({ default: false })
     isTfaEnabled: boolean;
 

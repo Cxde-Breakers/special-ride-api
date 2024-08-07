@@ -2,6 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { IsEnum, IsNotEmpty, IsPhoneNumber } from "class-validator";
 import { Gender } from "src/users/enums/gender.enum";
 
+
 export class CreatePassengerDto {
     @ApiProperty()
     @IsNotEmpty()
