@@ -57,7 +57,12 @@ export class AdminsService {
 
   async update(id: string, updateAdminDto: UpdateAdminDto) {
     try {
-      const admin = await this.adminRepository.findOneBy({ id });
+      const admin = await this.adminRepository.findOne({
+        where: {
+          id
+        },
+        relations: ['country']
+      });
 
       if (!admin) {
         throw new NotFoundException('Admin not found');
@@ -69,6 +74,7 @@ export class AdminsService {
           id: updateAdminDto.country ? updateAdminDto.country : admin.country.id
         },
         profilePicture: updateAdminDto.profilePicture ? updateAdminDto.profilePicture : admin.profilePicture,
+        status: updateAdminDto.status ? updateAdminDto.status : admin.status
       });
 
       return {

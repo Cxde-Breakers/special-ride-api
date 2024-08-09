@@ -65,7 +65,6 @@ async function createSuperAdmin() {
         });
 
         const message = await authenticationService.createSuperAdmin(email, password, name);
-        console.log(message);
 
     } catch (error) {
         console.error('Error creating SuperAdmin user:', error);

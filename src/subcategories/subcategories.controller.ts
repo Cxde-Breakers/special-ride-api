@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { SubcategoriesService } from './subcategories.service';
 import { CreateSubcategoryDto } from './dto/create-subcategory.dto';
 import { UpdateSubcategoryDto } from './dto/update-subcategory.dto';
@@ -7,6 +7,7 @@ import { SubCategoryQueryDto } from './dto/subcategory-query.dto';
 import { Roles } from 'src/iam/authorization/decorators/roles.decorator';
 import { PaginationQueryDto } from 'src/shared/dto/pagination-query.dto';
 import { Role } from 'src/users/enums/role.enum';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiBearerAuth()
 @ApiTags('subcategories')
@@ -16,7 +17,9 @@ export class SubcategoriesController {
 
   @Roles(Role.SuperAdmin)
   @Post()
-  create(@Body() createSubcategoryDto: CreateSubcategoryDto) {
+  @UseInterceptors(FileInterceptor('image'))
+  create(@Body() createSubcategoryDto: CreateSubcategoryDto, @UploadedFile() file: Express.Multer.File) {
+    createSubcategoryDto.image = file ? file.buffer.toString('base64') : null;
     return this.subcategoriesService.create(createSubcategoryDto);
   }
 
@@ -32,7 +35,9 @@ export class SubcategoriesController {
 
   @Roles(Role.SuperAdmin)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSubcategoryDto: UpdateSubcategoryDto) {
+  @UseInterceptors(FileInterceptor('image'))
+  update(@Param('id') id: string, @Body() updateSubcategoryDto: UpdateSubcategoryDto, @UploadedFile() file: Express.Multer.File) {
+    updateSubcategoryDto.image = file ? file.buffer.toString('base64') : null;
     return this.subcategoriesService.update(id, updateSubcategoryDto);
   }
 

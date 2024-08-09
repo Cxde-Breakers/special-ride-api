@@ -12,17 +12,14 @@ export class CreateCountryDto {
 
     @ApiProperty()
     @IsNotEmpty()
-    @IsNumber()
     commissionForDriver: number;
 
     @ApiProperty()
     @IsNotEmpty()
-    @IsNumber()
     commissionFromDriverPercentage: number;
 
     @ApiProperty()
     @IsNotEmpty()
-    @IsNumber()
     commission: number;
 
     @ApiProperty()
@@ -31,12 +28,10 @@ export class CreateCountryDto {
 
     @ApiProperty()
     @IsNotEmpty()
-    @IsNumber()
     localEarnings: number;
 
     @ApiProperty()
     @IsNotEmpty()
-    @IsNumber()
     usdEarnings: number;
 
     @ApiProperty()
@@ -57,12 +52,10 @@ export class CreateCountryDto {
 
     @ApiProperty()
     @IsNotEmpty()
-    @IsNumber()
     driverCreditLimit: number;
 
     @ApiProperty()
     @IsNotEmpty()
-    @IsNumber()
     maxDriverRadius: number;
 
     @ApiProperty()

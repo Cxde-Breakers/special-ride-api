@@ -12,6 +12,8 @@ export class CreateSubcategoryDto {
 
     @ApiProperty()
     @IsNotEmpty()
-    @IsNumber()
     order: number;
+
+    @ApiProperty({ type: 'binary', format: 'string' })
+    image: string;
 }

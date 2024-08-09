@@ -80,7 +80,6 @@ export class AuthenticationService {
 
             return this.generateTokens(user);
         } catch (error) {
-            console.log(error);
             const pgUniqueViolationErrorCode = '23505';
             if (error.code === pgUniqueViolationErrorCode) {
                 throw new ConflictException('User already exists');
